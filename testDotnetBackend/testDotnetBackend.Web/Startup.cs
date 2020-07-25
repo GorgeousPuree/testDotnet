@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using testDotnetBackend.Web.Abstractions.Services;
 using testDotnetBackend.Web.Infrastructure.Database;
+using testDotnetBackend.Web.Services;
 
 namespace testDotnetBackend.Web
 {
@@ -24,6 +26,8 @@ namespace testDotnetBackend.Web
             { options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")); });
 
             services.AddControllers();
+
+            services.AddTransient<ITransactionService, TransactionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,8 +20,14 @@ namespace testDotnetBackend.Web.Infrastructure.Database
             modelBuilder.Entity<Client>()
                 .HasMany(c => c.Transactions)
                 .WithOne(t => t.Client)
+                .HasForeignKey(t => t.ClientId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Client>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
+
         }
     }
 }

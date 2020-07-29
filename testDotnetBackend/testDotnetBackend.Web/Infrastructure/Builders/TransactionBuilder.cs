@@ -1,36 +1,33 @@
 ﻿using testDotnetBackend.Web.Abstractions.Validators;
-using testDotnetBackend.Web.Infrastructure.Models;
+using testDotnetBackend.Web.Infrastructure.Database.Entities;
 using testDotnetBackend.Web.Infrastructure.Responses;
 
 namespace testDotnetBackend.Web.Infrastructure.Builders
 {
-    public class TransactionModelBuilder
+    public class TransactionBuilder
     {
         private ITransactionModelValidator _transactionModelValidator;
-        public TransactionModelBuilder(ITransactionModelValidator transactionValidator)
+        public TransactionBuilder(ITransactionModelValidator transactionModelValidator)
         {
-            _transactionModelValidator = transactionValidator;
+            _transactionModelValidator = transactionModelValidator;
         }
 
-        public OperationDataResult<TransactionModel> BuildFromStrings(string[] lineElements)
+        public OperationDataResult<Transaction> BuildFromStrings(string[] lineElements)
         {
             int transactionId;
             decimal amount;
 
             var validationResult = _transactionModelValidator.IsValid(lineElements, out transactionId, out amount);
             if (validationResult.Success)
-            {
-                var transactionModel = new TransactionModel
+                return new OperationDataResult<Transaction>(true, new Transaction
                 {
                     Id = transactionId,
                     Status = lineElements[1],
                     Type = lineElements[2],
-                    ClientName = lineElements[3],
+                    Client = new Client { Name = lineElements[3] },
                     Amount = amount
-                };
-                return new OperationDataResult<TransactionModel>(true, transactionModel);
-            }
-            else return new OperationDataResult<TransactionModel>(false, validationResult.Message);
+                });
+            else return new OperationDataResult<Transaction>(false, validationResult.Message);
         }
     }
 }

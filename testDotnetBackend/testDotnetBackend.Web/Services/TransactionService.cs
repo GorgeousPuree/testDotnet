@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using testDotnetBackend.Web.Abstractions.Services;
 using testDotnetBackend.Web.Infrastructure.Builders;
 using testDotnetBackend.Web.Infrastructure.Database;
 using testDotnetBackend.Web.Infrastructure.Database.Entities;
-using testDotnetBackend.Web.Infrastructure.Models;
 using testDotnetBackend.Web.Infrastructure.Responses;
 using testDotnetBackend.Web.Infrastructure.Validators;
 
@@ -29,39 +29,39 @@ namespace testDotnetBackend.Web.Services
             #region update if exists, insert if not
             // kind of upsert implementation
 
-            foreach (var transactionModel in result.Model)
+            var transactionsToAdd = new List<Transaction>();
+            foreach (var pendingTransaction in result.Model)
             {
-                var client = await _applicationContext.Clients.FirstOrDefaultAsync(c => c.Name == transactionModel.ClientName);
-                if (client == null)
-                {
-                    client = new Client { Name = transactionModel.ClientName };
-                    _applicationContext.Clients.Add(client);
-                }
+                var foundTransaction = await _applicationContext.Transactions
+                    .Select(transaction => new Transaction { Id = transaction.Id, Status = transaction.Status })
+                    .Where(transaction => transaction.Id == pendingTransaction.Id)
+                    .FirstOrDefaultAsync();
 
-                var transaction = await _applicationContext.Transactions.FirstOrDefaultAsync(t => t.Id == transactionModel.Id);
-                if (transaction == null)
+                if (foundTransaction == null) transactionsToAdd.Add(pendingTransaction);
+                else
                 {
-                    transaction = new Transaction { Id = transactionModel.Id };
-                    _applicationContext.Transactions.Add(transaction);
+                    if (foundTransaction.Status != pendingTransaction.Status)
+                    {
+                        _applicationContext.Transactions.Attach(foundTransaction);
+                        foundTransaction.Status = pendingTransaction.Status;
+                        _applicationContext.Entry(foundTransaction).Property(transaction => transaction.Status).IsModified = true;
+                    }
                 }
-
-                transaction.Status = transactionModel.Status;
-                transaction.Type = transactionModel.Type;
-                transaction.Amount = transactionModel.Amount;
-                transaction.Client = client;
             }
+            await _applicationContext.Transactions.AddRangeAsync(transactionsToAdd);
             await _applicationContext.SaveChangesAsync();
+
             #endregion
 
             return new OperationResult(true);
         }
 
-        private async Task<OperationDataResult<List<TransactionModel>>> ReadTransactionsCsvFile(IFormFile formFile)
+        private async Task<OperationDataResult<List<Transaction>>> ReadTransactionsCsvFile(IFormFile formFile)
         {
-            TransactionModelBuilder transactionModelBuilder = new TransactionModelBuilder(new TransactionModelValidator());
-            List<TransactionModel> transactionModels = new List<TransactionModel>();
+            TransactionBuilder transactionBuilder = new TransactionBuilder(new TransactionModelValidator());
+            List<Transaction> transactions = new List<Transaction>();
 
-            #region filling transactionModels
+            #region reading transactions
             using (var reader = new StreamReader(formFile.OpenReadStream()))
             {
                 await reader.ReadLineAsync(); // skip headers
@@ -71,19 +71,19 @@ namespace testDotnetBackend.Web.Services
                 {
                     var lineElements = reader.ReadLineAsync().Result.Split(",");
 
-                    var transactionModelBuilderResult = transactionModelBuilder.BuildFromStrings(lineElements);
+                    var transactionModelBuilderResult = transactionBuilder.BuildFromStrings(lineElements);
                     if (!transactionModelBuilderResult.Success)
-                        return new OperationDataResult<List<TransactionModel>>(
+                        return new OperationDataResult<List<Transaction>>(
                             false,
                             transactionModelBuilderResult.Message + $" Failed at line {currentLine}.");
 
-                    transactionModels.Add(transactionModelBuilderResult.Model);
+                    transactions.Add(transactionModelBuilderResult.Model);
                     currentLine++;
                 }
             }
             #endregion
 
-            return new OperationDataResult<List<TransactionModel>>(true, transactionModels);
+            return new OperationDataResult<List<Transaction>>(true, transactions);
         }
     }
 }

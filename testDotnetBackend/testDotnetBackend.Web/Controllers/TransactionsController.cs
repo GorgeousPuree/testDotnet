@@ -21,9 +21,7 @@ namespace testDotnetBackend.Web.Controllers
         public async Task<IActionResult> ImportTransactions([FromForm(Name = "file")] IFormFile formFile)
         {
             var result = await _transactionService.ImportTransactionsAsync(formFile);
-
-            if (result.Success) return Ok();
-            return BadRequest(result.Message);
+            return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
         }
     }
 }

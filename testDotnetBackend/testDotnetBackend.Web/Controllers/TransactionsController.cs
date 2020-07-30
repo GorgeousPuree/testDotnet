@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using testDotnetBackend.Web.Abstractions.Services;
+using testDotnetBackend.Web.Infrastructure.Models;
 
 namespace testDotnetBackend.Web.Controllers
 {
@@ -26,9 +27,9 @@ namespace testDotnetBackend.Web.Controllers
         }
 
         [HttpGet("export")]
-        public async Task<IActionResult> ExportTransactions()
+        public async Task<IActionResult> ExportTransactions(TransactionFiltersModel transactionFiltersModel)
         {
-            var result = await _transactionService.ExportTransactionsAsync();
+            var result = await _transactionService.ExportTransactionsAsync(transactionFiltersModel);
             return File(Encoding.UTF8.GetBytes(result.Model), "text/csv", "data.csv");
         }
 

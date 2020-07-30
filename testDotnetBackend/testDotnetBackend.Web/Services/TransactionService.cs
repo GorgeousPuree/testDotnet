@@ -10,6 +10,7 @@ using testDotnetBackend.Web.Infrastructure.Builders;
 using testDotnetBackend.Web.Infrastructure.Database;
 using testDotnetBackend.Web.Infrastructure.Database.Entities;
 using testDotnetBackend.Web.Infrastructure.Extensions;
+using testDotnetBackend.Web.Infrastructure.Models;
 using testDotnetBackend.Web.Infrastructure.Responses;
 using testDotnetBackend.Web.Infrastructure.Validators;
 
@@ -54,12 +55,12 @@ namespace testDotnetBackend.Web.Services
             return new OperationResult(true);
         }
 
-        public async Task<OperationDataResult<string>> ExportTransactionsAsync()
+        public async Task<OperationDataResult<string>> ExportTransactionsAsync(TransactionFiltersModel transactionFiltersModel)
         {
             var builder = new StringBuilder();
             builder.AppendLine("TransactionId,Status,Type,ClientName,Amount");
 
-            await foreach (var transactionChunk in _applicationContext.Transactions.ToChunks())
+            await foreach (var transactionChunk in _applicationContext.Transactions.ToChunks(transactionFiltersModel.Status, transactionFiltersModel.Type))
                 foreach (var transaction in transactionChunk)
                     builder.AppendLine($"{transaction.TransactionId},{transaction.Status},{transaction.Type},{transaction.ClientName}");
 

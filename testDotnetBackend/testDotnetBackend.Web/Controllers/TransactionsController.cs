@@ -39,5 +39,12 @@ namespace testDotnetBackend.Web.Controllers
             var result = await _transactionService.UpdateTransactionStatusAsync(id, status);
             return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTransaction(int id)
+        {
+            var result = await _transactionService.DeleteTransactionAsync(id);
+            return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
+        }
     }
 }

@@ -86,6 +86,20 @@ namespace testDotnetBackend.Web.Services
             return new OperationResult(true);
         }
 
+        public async Task<OperationResult> DeleteTransactionAsync(int id)
+        {
+            var foundTransaction = await _applicationContext.Transactions
+                .Select(transaction => new Transaction { Id = transaction.Id })
+                .FirstOrDefaultAsync(transaction => transaction.Id == id);
+
+            if (foundTransaction == null) return new OperationResult(false, "Cannot find transaction with such id.");
+
+            _applicationContext.Transactions.Remove(foundTransaction);
+            await _applicationContext.SaveChangesAsync();
+
+            return new OperationResult(true);
+        }
+
         private async Task<OperationDataResult<List<Transaction>>> ReadTransactionsCsvFile(IFormFile formFile)
         {
             TransactionBuilder transactionBuilder = new TransactionBuilder(new TransactionModelValidator());

@@ -11,13 +11,13 @@ namespace testDotnetBackend.Web.Infrastructure.Extensions
         private const int transactionSegmentCount = 50;
         public static async IAsyncEnumerable<List<TransactionModel>> ToChunks(this DbSet<Transaction> transactions)
         {
-            int lastTransactionId = default;
             int count = transactions.Count();
 
             for (int i = 0; i < count; i += transactionSegmentCount)
             {
                 var transactionModels = await transactions
-                    .Where(transaction => transaction.Id > lastTransactionId)
+                    .OrderBy(transaction => transaction.Id)
+                    .Skip(i)
                     .Select(transaction => new TransactionModel
                     {
                         TransactionId = transaction.Id,
@@ -26,11 +26,9 @@ namespace testDotnetBackend.Web.Infrastructure.Extensions
                         ClientName = transaction.Client.Name,
                         Amount = transaction.Amount
                     })
-                    .OrderBy(transactionModel => transactionModel.TransactionId)
                     .Take(transactionSegmentCount)
                     .ToListAsync();
 
-                lastTransactionId = transactionModels.Last().TransactionId;
                 yield return transactionModels;
             }
         }

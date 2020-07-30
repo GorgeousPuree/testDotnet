@@ -34,18 +34,14 @@ namespace testDotnetBackend.Web.Services
             {
                 var foundTransaction = await _applicationContext.Transactions
                     .Select(transaction => new Transaction { Id = transaction.Id, Status = transaction.Status })
-                    .Where(transaction => transaction.Id == pendingTransaction.Id)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(transaction => transaction.Id == pendingTransaction.Id);
 
                 if (foundTransaction == null) transactionsToAdd.Add(pendingTransaction);
-                else
+                else if (foundTransaction.Status != pendingTransaction.Status)
                 {
-                    if (foundTransaction.Status != pendingTransaction.Status)
-                    {
-                        _applicationContext.Transactions.Attach(foundTransaction);
-                        foundTransaction.Status = pendingTransaction.Status;
-                        _applicationContext.Entry(foundTransaction).Property(transaction => transaction.Status).IsModified = true;
-                    }
+                    _applicationContext.Transactions.Attach(foundTransaction);
+                    foundTransaction.Status = pendingTransaction.Status;
+                    _applicationContext.Entry(foundTransaction).Property(transaction => transaction.Status).IsModified = true;
                 }
             }
             await _applicationContext.Transactions.AddRangeAsync(transactionsToAdd);
@@ -53,6 +49,25 @@ namespace testDotnetBackend.Web.Services
 
             #endregion
 
+            return new OperationResult(true);
+        }
+
+        public async Task<OperationResult> UpdateTransactionStatusAsync(int id, string status)
+        {
+            var foundTransaction = await _applicationContext.Transactions
+                .Select(transaction => new Transaction { Id = transaction.Id, Status = transaction.Status })
+                .FirstOrDefaultAsync(transaction => transaction.Id == id);
+
+            if (foundTransaction == null) return new OperationResult(false, "Cannot find transaction with such id.");
+
+            if (foundTransaction.Status != status)
+            {
+                _applicationContext.Transactions.Attach(foundTransaction);
+                foundTransaction.Status = status;
+                _applicationContext.Entry(foundTransaction).Property(transaction => transaction.Status).IsModified = true;
+            }
+
+            await _applicationContext.SaveChangesAsync();
             return new OperationResult(true);
         }
 

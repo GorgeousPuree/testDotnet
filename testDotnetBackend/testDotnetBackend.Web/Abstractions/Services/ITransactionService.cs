@@ -7,5 +7,6 @@ namespace testDotnetBackend.Web.Abstractions.Services
     public interface ITransactionService
     {
         Task<OperationResult> ImportTransactionsAsync(IFormFile formFile);
+        Task<OperationResult> UpdateTransactionStatusAsync(int id, string status);
     }
 }

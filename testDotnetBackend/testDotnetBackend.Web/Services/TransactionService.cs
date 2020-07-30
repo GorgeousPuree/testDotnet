@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using testDotnetBackend.Web.Abstractions.Services;
 using testDotnetBackend.Web.Infrastructure.Builders;
 using testDotnetBackend.Web.Infrastructure.Database;
 using testDotnetBackend.Web.Infrastructure.Database.Entities;
+using testDotnetBackend.Web.Infrastructure.Extensions;
 using testDotnetBackend.Web.Infrastructure.Responses;
 using testDotnetBackend.Web.Infrastructure.Validators;
 
@@ -50,6 +52,18 @@ namespace testDotnetBackend.Web.Services
             #endregion
 
             return new OperationResult(true);
+        }
+
+        public async Task<OperationDataResult<string>> ExportTransactionsAsync()
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("TransactionId,Status,Type,ClientName,Amount");
+
+            await foreach (var transactionChunk in _applicationContext.Transactions.ToChunks())
+                foreach (var transaction in transactionChunk)
+                    builder.AppendLine($"{transaction.TransactionId},{transaction.Status},{transaction.Type},{transaction.ClientName}");
+
+            return new OperationDataResult<string>(true, model: builder.ToString());
         }
 
         public async Task<OperationResult> UpdateTransactionStatusAsync(int id, string status)
@@ -102,4 +116,3 @@ namespace testDotnetBackend.Web.Services
         }
     }
 }
-

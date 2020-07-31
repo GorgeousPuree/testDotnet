@@ -24,6 +24,42 @@ namespace testDotnetBackend.Web.Services
             _applicationContext = applicationContext;
         }
 
+        public async Task<OperationDataResult<int>> GetTransactionsCountAsync(TransactionFiltersModel transactionFiltersModel)
+        {
+            var transactionsCount = await _applicationContext.Transactions
+                .Where(transaction =>
+                    (string.IsNullOrEmpty(transactionFiltersModel.Status) ? true 
+                        : transaction.Status == transactionFiltersModel.Status) &&
+                    (string.IsNullOrEmpty(transactionFiltersModel.Type) ? true 
+                        : transaction.Type == transactionFiltersModel.Type)).CountAsync();
+
+            return new OperationDataResult<int>(true, transactionsCount);
+        }
+
+        public async Task<OperationDataResult<List<TransactionModel>>> GetTransactionsPageAsync(GetTransactionsPageModel getTransactionsPageModel)
+        {
+            var transactionsPage = await _applicationContext.Transactions
+                .Where(transaction =>
+                    (string.IsNullOrEmpty(getTransactionsPageModel.TransactionFilters.Status) ? true
+                        : transaction.Status == getTransactionsPageModel.TransactionFilters.Status) &&
+                    (string.IsNullOrEmpty(getTransactionsPageModel.TransactionFilters.Type) ? true
+                        : transaction.Type == getTransactionsPageModel.TransactionFilters.Type))
+                .OrderBy(transaction => transaction.Id)
+                .Skip((getTransactionsPageModel.PageNumber - 1) * getTransactionsPageModel.NumberOfItemsPerPage)
+                .Take(getTransactionsPageModel.NumberOfItemsPerPage)
+                .Select(transaction => new TransactionModel
+                {
+                    TransactionId = transaction.Id,
+                    Status = transaction.Status,
+                    Type = transaction.Type,
+                    ClientName = transaction.Client.Name,
+                    Amount = transaction.Amount
+                })
+                .ToListAsync();
+
+            return new OperationDataResult<List<TransactionModel>>(true, transactionsPage);
+        }
+
         public async Task<OperationResult> ImportTransactionsAsync(IFormFile formFile)
         {
             var result = await ReadTransactionsCsvFile(formFile);

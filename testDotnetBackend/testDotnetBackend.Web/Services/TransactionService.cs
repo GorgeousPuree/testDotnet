@@ -40,10 +40,10 @@ namespace testDotnetBackend.Web.Services
         {
             var transactionsPage = await _applicationContext.Transactions
                 .Where(transaction =>
-                    (string.IsNullOrEmpty(getTransactionsPageModel.TransactionFilters.Status) ? true
-                        : transaction.Status == getTransactionsPageModel.TransactionFilters.Status) &&
-                    (string.IsNullOrEmpty(getTransactionsPageModel.TransactionFilters.Type) ? true
-                        : transaction.Type == getTransactionsPageModel.TransactionFilters.Type))
+                    (string.IsNullOrEmpty(getTransactionsPageModel.Status) ? true
+                        : transaction.Status == getTransactionsPageModel.Status) &&
+                    (string.IsNullOrEmpty(getTransactionsPageModel.Type) ? true
+                        : transaction.Type == getTransactionsPageModel.Type))
                 .OrderBy(transaction => transaction.Id)
                 .Skip((getTransactionsPageModel.PageNumber - 1) * getTransactionsPageModel.NumberOfItemsPerPage)
                 .Take(getTransactionsPageModel.NumberOfItemsPerPage)

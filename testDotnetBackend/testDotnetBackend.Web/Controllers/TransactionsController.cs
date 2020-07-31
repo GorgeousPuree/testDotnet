@@ -19,32 +19,32 @@ namespace testDotnetBackend.Web.Controllers
             _transactionService = transactionService;
         }
 
-        [HttpGet("page")]
-        public async Task<IActionResult> GetTransactionsPage(GetTransactionsPageModel getTransactionsPageModel)
+        [HttpGet("page/{pageNumber}")]
+        public async Task<IActionResult> GetTransactionsPage([FromQuery] GetTransactionsPageModel getTransactionsPageModel)
         {
             var result = await _transactionService.GetTransactionsPageAsync(getTransactionsPageModel);
             return result.Success ? (IActionResult)Ok(result.Model) : BadRequest(result.Message);
         }
 
         [HttpGet("count")]
-        public async Task<IActionResult> GetTransactionsCount(TransactionFiltersModel transactionFiltersModel)
+        public async Task<IActionResult> GetTransactionsCount([FromQuery] TransactionFiltersModel transactionFiltersModel)
         {
             var result = await _transactionService.GetTransactionsCountAsync(transactionFiltersModel);
             return result.Success ? (IActionResult)Ok(result.Model) : StatusCode(500);
         }
 
-        [HttpPost("import")]
-        public async Task<IActionResult> ImportTransactions([FromForm(Name = "file")] IFormFile formFile)
-        {
-            var result = await _transactionService.ImportTransactionsAsync(formFile);
-            return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
-        }
-
         [HttpGet("export")]
-        public async Task<IActionResult> ExportTransactions(TransactionFiltersModel transactionFiltersModel)
+        public async Task<IActionResult> GetExportedTransactions([FromQuery] TransactionFiltersModel transactionFiltersModel)
         {
             var result = await _transactionService.ExportTransactionsAsync(transactionFiltersModel);
             return result.Success ? File(Encoding.UTF8.GetBytes(result.Model), "text/csv", "data.csv") : (IActionResult)StatusCode(500);
+        }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> AddImportedTransactions([FromForm(Name = "csv")] IFormFile formFile)
+        {
+            var result = await _transactionService.ImportTransactionsAsync(formFile);
+            return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
         }
 
         [HttpPut("{id}")]

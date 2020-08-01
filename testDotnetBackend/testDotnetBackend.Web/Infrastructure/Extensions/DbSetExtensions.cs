@@ -22,7 +22,7 @@ namespace testDotnetBackend.Web.Infrastructure.Extensions
                     .Skip(i)
                     .Select(transaction => new TransactionModel
                     {
-                        TransactionId = transaction.Id,
+                        Id = transaction.Id,
                         Status = transaction.Status,
                         Type = transaction.Type,
                         ClientName = transaction.Client.Name,

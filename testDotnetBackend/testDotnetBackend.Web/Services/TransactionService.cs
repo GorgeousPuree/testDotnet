@@ -49,7 +49,7 @@ namespace testDotnetBackend.Web.Services
                 .Take(getTransactionsPageModel.NumberOfItemsPerPage)
                 .Select(transaction => new TransactionModel
                 {
-                    TransactionId = transaction.Id,
+                    Id = transaction.Id,
                     Status = transaction.Status,
                     Type = transaction.Type,
                     ClientName = transaction.Client.Name,
@@ -98,7 +98,7 @@ namespace testDotnetBackend.Web.Services
 
             await foreach (var transactionChunk in _applicationContext.Transactions.ToChunks(transactionFiltersModel.Status, transactionFiltersModel.Type))
                 foreach (var transaction in transactionChunk)
-                    builder.AppendLine($"{transaction.TransactionId},{transaction.Status},{transaction.Type},{transaction.ClientName},${transaction.Amount}");
+                    builder.AppendLine($"{transaction.Id},{transaction.Status},{transaction.Type},{transaction.ClientName},${transaction.Amount}");
 
             return new OperationDataResult<string>(true, model: builder.ToString());
         }

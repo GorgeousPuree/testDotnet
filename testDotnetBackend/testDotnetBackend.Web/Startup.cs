@@ -25,6 +25,7 @@ namespace testDotnetBackend.Web
             services.AddDbContext<ApplicationContext>(options =>
             { options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")); });
 
+            services.AddCors();
             services.AddControllers();
 
             services.AddTransient<ITransactionService, TransactionService>();
@@ -43,6 +44,15 @@ namespace testDotnetBackend.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
+
 
             app.UseRouting();
 

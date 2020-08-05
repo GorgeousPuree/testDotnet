@@ -76,11 +76,9 @@ namespace testDotnetBackend.Web.Services
                     .FirstOrDefaultAsync(transaction => transaction.Id == pendingTransaction.Id);
 
                 if (foundTransaction == null) transactionsToAdd.Add(pendingTransaction);
-                else if (foundTransaction.Status != pendingTransaction.Status)
-                {
-                    _applicationContext.Transactions.Attach(foundTransaction);
+                else {
+                    _applicationContext.Attach(foundTransaction);
                     foundTransaction.Status = pendingTransaction.Status;
-                    _applicationContext.Entry(foundTransaction).Property(transaction => transaction.Status).IsModified = true;
                 }
             }
             await _applicationContext.Transactions.AddRangeAsync(transactionsToAdd);

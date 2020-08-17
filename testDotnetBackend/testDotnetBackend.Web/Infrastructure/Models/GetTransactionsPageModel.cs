@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using testDotnetBackend.Web.Infrastructure.CustomAttributes;
 
 namespace testDotnetBackend.Web.Infrastructure.Models
 {
@@ -12,10 +14,12 @@ namespace testDotnetBackend.Web.Infrastructure.Models
         [Range(1, int.MaxValue, ErrorMessage = "NumberOfItemsPerPage has to be bigger than {1}")]
         public int NumberOfItemsPerPage { get; set; }
 
-        [RegularExpression("(Completed|Pending|Cancelled)")]
-        public string Status { get; set; }
+        [AllowedStatuses(ErrorMessage = "Unknown transaction status.")]
+        [FromQuery(Name = "statuses[]")]
+        public List<string> Statuses { get; set; }
 
-        [RegularExpression("(Refill|Withdrawal)")]
-        public string Type { get; set; }
+        [AllowedTypes(ErrorMessage = "Unknown transaction type.")]
+        [FromQuery(Name = "types[]")]
+        public List<string> Types { get; set; }
     }
 }

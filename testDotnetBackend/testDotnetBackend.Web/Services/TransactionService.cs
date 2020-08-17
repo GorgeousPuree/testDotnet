@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,23 +28,26 @@ namespace testDotnetBackend.Web.Services
         public async Task<OperationDataResult<int>> GetTransactionsCountAsync(TransactionFiltersModel transactionFiltersModel)
         {
             var transactionsCount = await _applicationContext.Transactions
-                .Where(transaction =>
-                    (string.IsNullOrEmpty(transactionFiltersModel.Status) ? true 
-                        : transaction.Status == transactionFiltersModel.Status) &&
-                    (string.IsNullOrEmpty(transactionFiltersModel.Type) ? true 
-                        : transaction.Type == transactionFiltersModel.Type)).CountAsync();
+                .Where(transaction => 
+                    (transactionFiltersModel.Statuses == null ? true :
+                    transactionFiltersModel.Statuses.Contains(transaction.Status)) &&
+                    (transactionFiltersModel.Types == null ? true :
+                    transactionFiltersModel.Types.Contains(transaction.Type)))             
+                .CountAsync();
 
             return new OperationDataResult<int>(true, transactionsCount);
         }
 
         public async Task<OperationDataResult<List<TransactionModel>>> GetTransactionsPageAsync(GetTransactionsPageModel getTransactionsPageModel)
         {
+            // TODO: refactor
             var transactionsPage = await _applicationContext.Transactions
                 .Where(transaction =>
-                    (string.IsNullOrEmpty(getTransactionsPageModel.Status) ? true
-                        : transaction.Status == getTransactionsPageModel.Status) &&
-                    (string.IsNullOrEmpty(getTransactionsPageModel.Type) ? true
-                        : transaction.Type == getTransactionsPageModel.Type))
+                      (getTransactionsPageModel.Statuses == null) ? true
+                      : getTransactionsPageModel.Statuses.Contains(transaction.Status) )
+                .Where(transaction =>
+                      (getTransactionsPageModel.Types == null) ? true
+                      : getTransactionsPageModel.Types.Contains(transaction.Type))
                 .OrderBy(transaction => transaction.Id)
                 .Skip((getTransactionsPageModel.PageNumber - 1) * getTransactionsPageModel.NumberOfItemsPerPage)
                 .Take(getTransactionsPageModel.NumberOfItemsPerPage)
@@ -76,7 +80,8 @@ namespace testDotnetBackend.Web.Services
                     .FirstOrDefaultAsync(transaction => transaction.Id == pendingTransaction.Id);
 
                 if (foundTransaction == null) transactionsToAdd.Add(pendingTransaction);
-                else {
+                else
+                {
                     _applicationContext.Attach(foundTransaction);
                     foundTransaction.Status = pendingTransaction.Status;
                 }
@@ -94,7 +99,7 @@ namespace testDotnetBackend.Web.Services
             var builder = new StringBuilder();
             builder.AppendLine("TransactionId,Status,Type,ClientName,Amount");
 
-            await foreach (var transactionChunk in _applicationContext.Transactions.ToChunks(transactionFiltersModel.Status, transactionFiltersModel.Type))
+            await foreach (var transactionChunk in _applicationContext.Transactions.ToChunks(transactionFiltersModel))
                 foreach (var transaction in transactionChunk)
                     builder.AppendLine($"{transaction.Id},{transaction.Status},{transaction.Type},{transaction.ClientName},${transaction.Amount}");
 

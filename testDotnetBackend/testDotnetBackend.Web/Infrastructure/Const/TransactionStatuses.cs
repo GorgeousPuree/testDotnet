@@ -1,4 +1,6 @@
-﻿namespace testDotnetBackend.Web.Infrastructure.Const
+﻿using System.Collections.Generic;
+
+namespace testDotnetBackend.Web.Infrastructure.Const
 {
     public static class TransactionStatuses
     {
@@ -6,11 +8,11 @@
         public const string COMPLETED = "Completed";
         public const string CANCELLED = "Cancelled";
 
-        public static string[] ALL
+        public static List<string> ALL
         {
             get
             {
-                return new string[] { PENDING, COMPLETED, CANCELLED };
+                return new List<string> { PENDING, COMPLETED, CANCELLED };
             }
         }
     }

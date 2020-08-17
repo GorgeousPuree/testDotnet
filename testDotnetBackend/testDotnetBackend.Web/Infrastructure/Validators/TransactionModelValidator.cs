@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using testDotnetBackend.Web.Abstractions.Validators;
+﻿using testDotnetBackend.Web.Abstractions.Validators;
 using testDotnetBackend.Web.Infrastructure.Const;
 using testDotnetBackend.Web.Infrastructure.Responses;
 

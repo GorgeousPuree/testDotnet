@@ -1,0 +1,16 @@
+/*.transactionFiltersWrapper {*/
+/*    display: flex;*/
+/*}*/
+
+/*.transactionFiltersWrapper {*/
+/*    color: black;*/
+/*    margin-right: 20rem;*/
+/*}*/
+
+/*.transactionFiltersWrapper > Dropdown:nth-child(2) {*/
+/*    margin-right: 10rem;*/
+/*    border: 2px solid red;*/
+/*}*/
+.dropdown-toggle {
+    width: 100%;
+}

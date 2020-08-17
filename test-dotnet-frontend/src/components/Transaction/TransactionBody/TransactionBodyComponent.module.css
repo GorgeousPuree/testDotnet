@@ -1,0 +1,15 @@
+.transactionBodyWrapper {
+    padding: 1% 0;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
+    justify-content: space-between;
+}
+
+@media only screen and (max-width: 767px) {
+    .transactionBodyWrapper {
+        width: 95%;
+    }
+}

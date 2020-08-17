@@ -1,16 +1,17 @@
 import {TransactionActionTypes} from "../actionTypes";
 
 export const TransactionActionCreators = {
-    addImportedTransactionsRequest: () => ({
+    addImportedTransactionsRequest: (csv) => ({
         type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST,
+        csv: csv
     }),
 
     addImportedTransactionsSuccess: () => ({
-        type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST
+        type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_SUCCESS,
     }),
 
     addImportedTransactionsFailure: (error) => ({
-        type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST,
+        type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_FAILURE,
         payload: error
     }),
 
@@ -28,9 +29,8 @@ export const TransactionActionCreators = {
         payload: error
     }),
 
-    getTransactionsCountRequest: (filters = {status: "", type: ""}) => ({
-        type: TransactionActionTypes.GET_TRANSACTIONS_COUNT_REQUEST,
-        payload: filters
+    getTransactionsCountRequest: () => ({
+        type: TransactionActionTypes.GET_TRANSACTIONS_COUNT_REQUEST
     }),
 
     getTransactionsCountSuccess: (transactionsCount) => ({
@@ -43,9 +43,8 @@ export const TransactionActionCreators = {
         payload: error
     }),
 
-    getTransactionsPageRequest: (searchSettings = {pageNumber: 1, filters: {status: "", type: ""}}) => ({
+    getTransactionsPageRequest: () => ({
         type: TransactionActionTypes.GET_TRANSACTIONS_PAGE_REQUEST,
-        payload: searchSettings
     }),
 
     getTransactionsPageSuccess: (transactions) => ({
@@ -82,5 +81,15 @@ export const TransactionActionCreators = {
     deleteTransactionFailure: (error) => ({
         type: TransactionActionTypes.DELETE_TRANSACTION_FAILURE,
         payload: error
+    }),
+
+    setTransactionStatusesFilter: (statuses) => ({
+        type: TransactionActionTypes.SET_TRANSACTION_STATUSES_FILTER,
+        payload: statuses,
+    }),
+
+    setTransactionTypesFilter: (types) => ({
+        type: TransactionActionTypes.SET_TRANSACTION_TYPES_FILTER,
+        payload: types
     })
 };

@@ -9,36 +9,45 @@ const initialState = {
     transactionsPageError: "",
     transactionsCountError: "",
 
+    areTransactionsImporting: false,
+    isTransactionImportFinished: false,
+    importError: "",
+
     pageNumber: 1,
     pagesCount: 1,
 
-    status: "",
-    type: ""
+    transactionStatusesFilter: [],
+    transactionTypesFilter: [],
+    isDataActualTrigger: false
 };
 
 export const TransactionReducer = (state = initialState, action) => {
     switch (action.type) {
-        // case TransactionsConstants.ADD_IMPORTED_TRANSACTIONS_REQUEST:
-        //     return {
-        //         ...state,
-        //         isLoading: true
-        //     };
-        //
-        // case TransactionsConstants.ADD_IMPORTED_TRANSACTIONS_SUCCESS:
-        //     return {
-        //         ...state,
-        //         isLoading: false,
-        //         transactions: action.payload,
-        //         error: ""
-        //     };
-        //
-        // case TransactionsConstants.ADD_IMPORTED_TRANSACTIONS_FAILURE:
-        //     return {
-        //         ...state,
-        //         isLoading: false,
-        //         error: action.payload
-        //     };
-        //
+        case TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST:
+            return {
+                ...state,
+                areTransactionsImporting: true,
+                isTransactionImportFinished: false
+            };
+
+        case TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_SUCCESS:
+            return {
+                ...state,
+                areTransactionsImporting: false,
+                isTransactionImportFinished: true,
+                pageNumber: 1,
+                isDataActualTrigger: !state.isDataActualTrigger,
+                importError: ""
+            };
+
+        case TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_FAILURE:
+            return {
+                ...state,
+                areTransactionsImporting: false,
+                isTransactionImportFinished: false,
+                importError: action.payload
+            };
+
         // case TransactionsConstants.GET_EXPORTED_TRANSACTIONS_REQUEST:
         //     return {
         //         ...state,
@@ -84,6 +93,18 @@ export const TransactionReducer = (state = initialState, action) => {
                 ...state,
                 isTransactionsCountLoading: true,
                 transactionsCountError: action.payload
+            };
+
+        case TransactionActionTypes.SET_TRANSACTION_STATUSES_FILTER:
+            return {
+                ...state,
+                transactionStatusesFilter: action.payload
+            };
+
+        case TransactionActionTypes.SET_TRANSACTION_TYPES_FILTER:
+            return {
+                ...state,
+                transactionTypesFilter: action.payload
             };
 
         default:

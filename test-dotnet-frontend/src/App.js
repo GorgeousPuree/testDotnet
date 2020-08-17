@@ -1,15 +1,17 @@
 import React from 'react';
-import AppStyles from './App.module.css';
+import AppStyles from './App.css';
 import {store} from './redux/store'
 import {Provider} from "react-redux";
+import 'react-app-polyfill/stable';
+import 'bootstrap/dist/css/bootstrap.css';
 
-import TransactionListComponent from "./components/Transaction/TransactionList/TransactionListComponent";
+import TransactionBodyComponent from "./components/Transaction/TransactionBody/TransactionBodyComponent";
 
 function App() {
   return (
       <Provider store={store}>
-          <div className={AppStyles.app_wrapper}>
-              <TransactionListComponent/>
+          <div className={"app-wrapper"}>
+              <TransactionBodyComponent/>
           </div>
       </Provider>
   );

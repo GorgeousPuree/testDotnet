@@ -1,5 +1,8 @@
 import React from "react";
 
+import Button from "react-bootstrap/cjs/Button";
+import TransactionActionButtonsComponent from "../TransactionActionButtons/TransactionActionButtonsComponents";
+
 const TransactionElementComponent = (props) => {
     return (
         <tr>
@@ -8,6 +11,9 @@ const TransactionElementComponent = (props) => {
             <td>{props.transaction.type}</td>
             <td>{props.transaction.clientName}</td>
             <td>${props.transaction.amount}</td>
+            <td>
+                <TransactionActionButtonsComponent/>
+            </td>
         </tr>
     )
 };

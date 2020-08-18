@@ -18,7 +18,8 @@ namespace testDotnetBackend.Web.Infrastructure.Extensions
                 var transactionModels = await transactions
                     .Where(transaction =>
                           (transactionFiltersModel.Statuses == null) ? true
-                                : transactionFiltersModel.Statuses.Contains(transaction.Status) &&
+                                : transactionFiltersModel.Statuses.Contains(transaction.Status))
+                    .Where(transaction =>
                           (transactionFiltersModel.Types == null) ? true
                                 : transactionFiltersModel.Types.Contains(transaction.Type))
                     .OrderBy(transaction => transaction.Id)

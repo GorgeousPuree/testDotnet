@@ -17,11 +17,15 @@ axios.interceptors.request.use(config => {
 export const TransactionApi = {
     addImportedTransactions: (csv) => axios.post(transactionUrl + "import", csv, {headers: {'Content-Type': 'multipart/form-data'}}),
 
-    getExportedTransactions: (status, type) => axios.get(transactionUrl + "export/",
-        {params: {status: status, type: type}}),
+    getExportedTransactions: (filters) => axios.get(transactionUrl + "export",
+        {
+            params: {
+                statuses: filters.transactionStatusesFilter,
+                types: filters.transactionTypesFilter
+            }
+        }),
 
     getTransactionsCount: (filters) => axios.get(transactionUrl + "count",
-        //{params: {status: filters.status, type: filters.type}}),
         {
             params: {
                 statuses: filters.transactionStatusesFilter,
@@ -36,17 +40,7 @@ export const TransactionApi = {
                 types: searchSettings.transactionFilters.transactionTypesFilter,
                 numberOfItemsPerPage: numberOfItemsPerPage
             }
-            // paramsSerializer: params => {
-            //     return qs.stringify(params)
-            // }
-            //paramsSerializer: params => qs.stringify(params, { arrayFormat: 'brackets' })
-            // params: {
-            //     statuses: [1,2,3],
-            //     types: [4,5,6],
-            //     numberOfItemsPerPage: numberOfItemsPerPage
-            // }
         }),
-
 
     updateTransactionStatus: (id, status) => axios.put(transactionUrl + id + "/", status),
 

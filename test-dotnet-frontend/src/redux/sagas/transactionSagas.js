@@ -44,14 +44,36 @@ export function* getTransactionsCountWatcher() {
 function* addImportedTransactionsSaga(action) {
     const csv = action.csv;
     try {
-        yield call(TransactionApi.addImportedTransactions, csv);
-        yield put(TransactionActionCreators.addImportedTransactionsSuccess());
+        const response = yield call(TransactionApi.addImportedTransactions, csv);
+        yield put(TransactionActionCreators.addImportedTransactionsSuccess(response.data));
     } catch (e) {
-        console.log(e);
         yield put(TransactionActionCreators.addImportedTransactionsFailure(e.message))
     }
 }
 
 export function* addImportedTransactionsWatcher() {
     yield takeLatest(TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST, addImportedTransactionsSaga);
+}
+
+function* getExportedTransactionsSaga() {
+    const filters = yield select(getFilters);
+    try {
+        const response = yield call(TransactionApi.getExportedTransactions, filters);
+
+        // TODO: refactor
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'data.csv');
+        document.body.appendChild(link);
+        link.click();
+
+        yield put(TransactionActionCreators.getExportedTransactionsSuccess());
+    } catch (e) {
+        yield put(TransactionActionCreators.getExportedTransactionsFailure(e.message));
+    }
+}
+
+export function* getExportedTransactionsWatcher() {
+    yield takeLatest(TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_REQUEST, getExportedTransactionsSaga);
 }

@@ -1,5 +1,5 @@
-import { TransactionActionTypes } from "../actionTypes";
-import { AppConstants} from "../../config/constants";
+import {TransactionActionTypes} from "../actionTypes";
+import {AppConstants} from "../../config/constants";
 
 const initialState = {
     transactions: [],
@@ -48,11 +48,22 @@ export const TransactionReducer = (state = initialState, action) => {
                 importError: action.payload
             };
 
-        // case TransactionsConstants.GET_EXPORTED_TRANSACTIONS_REQUEST:
-        //     return {
-        //         ...state,
-        //
-        //     }
+        // TODO: process all possible outcomes
+        case TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_REQUEST:
+            return {
+                ...state,
+            };
+
+        case TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_SUCCESS:
+            return {
+                ...state
+            };
+
+        case  TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_FAILURE:
+            return {
+                ...state
+            };
+
         case TransactionActionTypes.GET_TRANSACTIONS_PAGE_REQUEST:
             return {
                 ...state,

@@ -23,7 +23,7 @@ const TransactionCsvButtonsComponent = () => {
     };
 
     const exportCsv = () => {
-
+        dispatch(TransactionActionCreators.getExportedTransactionsRequest());
     };
 
     return (
@@ -33,7 +33,7 @@ const TransactionCsvButtonsComponent = () => {
                 <Button onClick={importCsv} className={"btn-block"}>Import</Button>
             </Col>
             <Col>
-                <Button onClick={exportCsv} className={"btn-block"} >Export</Button>
+                <Button onClick={exportCsv} className={"btn-block"}>Export</Button>
             </Col>
         </Row>
 

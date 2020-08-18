@@ -19,9 +19,8 @@ export const TransactionActionCreators = {
         type: TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_REQUEST
     }),
 
-    getExportedTransactionsSuccess: (csv) => ({
+    getExportedTransactionsSuccess: () => ({
         type: TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_SUCCESS,
-        payload: csv
     }),
 
     getExportedTransactionsFailure: (error) => ({

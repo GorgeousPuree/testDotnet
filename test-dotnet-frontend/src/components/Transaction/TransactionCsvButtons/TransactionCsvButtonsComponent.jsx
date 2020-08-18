@@ -17,6 +17,8 @@ const TransactionCsvButtonsComponent = () => {
         csvFileRef.current.click();
     };
     const importCsvOnChange = (e) => {
+        if (e.target.files[0] === undefined) return;
+
         let formData = new FormData();
         formData.append("csv", e.target.files[0]);
         dispatch(TransactionActionCreators.addImportedTransactionsRequest(formData));

@@ -28,11 +28,11 @@ namespace testDotnetBackend.Web.Services
         public async Task<OperationDataResult<int>> GetTransactionsCountAsync(TransactionFiltersModel transactionFiltersModel)
         {
             var transactionsCount = await _applicationContext.Transactions
-                .Where(transaction => 
+                .Where(transaction =>
                     (transactionFiltersModel.Statuses == null ? true :
                     transactionFiltersModel.Statuses.Contains(transaction.Status)) &&
                     (transactionFiltersModel.Types == null ? true :
-                    transactionFiltersModel.Types.Contains(transaction.Type)))             
+                    transactionFiltersModel.Types.Contains(transaction.Type)))
                 .CountAsync();
 
             return new OperationDataResult<int>(true, transactionsCount);
@@ -44,7 +44,7 @@ namespace testDotnetBackend.Web.Services
             var transactionsPage = await _applicationContext.Transactions
                 .Where(transaction =>
                       (getTransactionsPageModel.Statuses == null) ? true
-                      : getTransactionsPageModel.Statuses.Contains(transaction.Status) )
+                      : getTransactionsPageModel.Statuses.Contains(transaction.Status))
                 .Where(transaction =>
                       (getTransactionsPageModel.Types == null) ? true
                       : getTransactionsPageModel.Types.Contains(transaction.Type))
@@ -145,25 +145,30 @@ namespace testDotnetBackend.Web.Services
             List<Transaction> transactions = new List<Transaction>();
 
             #region reading transactions
-            using (var reader = new StreamReader(formFile.OpenReadStream()))
+
+            try
             {
-                await reader.ReadLineAsync(); // skip headers
-                int currentLine = 1;
-
-                while (reader.Peek() >= 0)
+                using (var reader = new StreamReader(formFile?.OpenReadStream()))
                 {
-                    var lineElements = reader.ReadLineAsync().Result.Split(",");
+                    await reader.ReadLineAsync(); // skip headers
+                    int currentLine = 1;
 
-                    var transactionModelBuilderResult = transactionBuilder.BuildFromStrings(lineElements);
-                    if (!transactionModelBuilderResult.Success)
-                        return new OperationDataResult<List<Transaction>>(
-                            false,
-                            transactionModelBuilderResult.Message + $" Failed at line {currentLine}.");
+                    while (reader.Peek() >= 0)
+                    {
+                        var lineElements = reader.ReadLineAsync().Result.Split(",");
 
-                    transactions.Add(transactionModelBuilderResult.Model);
-                    currentLine++;
+                        var transactionModelBuilderResult = transactionBuilder.BuildFromStrings(lineElements);
+                        if (!transactionModelBuilderResult.Success)
+                            return new OperationDataResult<List<Transaction>>(
+                                false,
+                                transactionModelBuilderResult.Message + $" Failed at line {currentLine}.");
+
+                        transactions.Add(transactionModelBuilderResult.Model);
+                        currentLine++;
+                    }
                 }
             }
+            catch { return new OperationDataResult<List<Transaction>>(false, "Cannot read uploaded file."); }
             #endregion
 
             return new OperationDataResult<List<Transaction>>(true, transactions);

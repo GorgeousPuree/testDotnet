@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using testDotnetBackend.Web.Abstractions.Services;
+using testDotnetBackend.Web.Infrastructure.CustomAttributes;
 using testDotnetBackend.Web.Infrastructure.Models;
 
 namespace testDotnetBackend.Web.Controllers
@@ -41,7 +42,9 @@ namespace testDotnetBackend.Web.Controllers
         }
 
         [HttpPost("import")]
-        public async Task<IActionResult> AddImportedTransactions([FromForm(Name = "csv")] IFormFile formFile)
+        public async Task<IActionResult> AddImportedTransactions([FromForm(Name = "csv"),
+                                                                 AllowedExtensions(new string[] { ".xlsx", ".xls", ".csv" },
+                                                                 ErrorMessage = "Not supported file extension.")] IFormFile formFile)
         {
             var result = await _transactionService.ImportTransactionsAsync(formFile);
             return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);

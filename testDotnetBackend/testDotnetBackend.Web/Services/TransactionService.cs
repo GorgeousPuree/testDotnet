@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -79,7 +78,20 @@ namespace testDotnetBackend.Web.Services
                     .Select(transaction => new Transaction { Id = transaction.Id, Status = transaction.Status })
                     .FirstOrDefaultAsync(transaction => transaction.Id == pendingTransaction.Id);
 
-                if (foundTransaction == null) transactionsToAdd.Add(pendingTransaction);
+                if (foundTransaction == null)
+                {
+                    var foundClientId = await _applicationContext.Clients
+                        .Where(client => client.Name == pendingTransaction.Client.Name)
+                        .Select(client => client.Id)
+                        .FirstOrDefaultAsync();
+
+                    if (foundClientId > 0)
+                    {
+                        pendingTransaction.ClientId = foundClientId;
+                        pendingTransaction.Client = null;
+                    }
+                    transactionsToAdd.Add(pendingTransaction);
+                }
                 else
                 {
                     _applicationContext.Attach(foundTransaction);

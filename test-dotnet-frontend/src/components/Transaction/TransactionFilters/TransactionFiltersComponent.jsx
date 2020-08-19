@@ -15,18 +15,11 @@ const TransactionFiltersComponent = () => {
     const selectOptions = [
         {
             label: "Statuses",
-            options: [
-                {value: "pending", label: "Pending"},
-                {value: "completed", label: "Completed"},
-                {value: "cancelled", label: "Cancelled"}
-            ]
+            options: AppConstants.TRANSACTION_STATUSES.map(status => ({value: status.toLowerCase(), label: status}))
         },
         {
             label: "Types",
-            options: [
-                {value: "withdrawal", label: "Withdrawal"},
-                {value: "refill", label: "Refill"}
-            ]
+            options: AppConstants.TRANSACTION_TYPES.map(type => ({value: type.toLowerCase(), label: type}))
         }
     ];
 
@@ -54,7 +47,8 @@ const TransactionFiltersComponent = () => {
             <Col>
                 <Select placeholder={"Filters"}
                         options={selectOptions}
-                        isMulti closeMenuOnSelect={false}
+                        isMulti
+                        closeMenuOnSelect={false}
                         onBlur={() => handleSelectBlur()}
                         onChange={changeFilters}
                         value={filters}/>

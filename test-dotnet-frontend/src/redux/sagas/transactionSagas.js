@@ -92,3 +92,17 @@ function* updateTransactionStatusSaga(action) {
 export function* updateTransactionStatusWatcher() {
     yield takeLatest(TransactionActionTypes.UPDATE_TRANSACTION_STATUS_REQUEST, updateTransactionStatusSaga);
 }
+
+function* deleteTransactionSaga(action) {
+    const transactionId = action.transactionId;
+    try {
+        yield call(TransactionApi.deleteTransaction, transactionId);
+        yield put(TransactionActionCreators.deleteTransactionSuccess());
+    } catch (e) {
+        yield put(TransactionActionCreators.deleteTransactionFailure(e.message));
+    }
+}
+
+export function* deleteTransactionWatcher() {
+    yield takeLatest(TransactionActionTypes.DELETE_TRANSACTION_REQUEST, deleteTransactionSaga);
+}

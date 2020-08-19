@@ -137,6 +137,24 @@ export const TransactionReducer = (state = initialState, action) => {
                 transactionsPageError: action.payload
             };
 
+        case TransactionActionTypes.DELETE_TRANSACTION_REQUEST:
+            return {
+                ...state
+            };
+
+        case TransactionActionTypes.DELETE_TRANSACTION_SUCCESS:
+            return {
+                ...state,
+                transactionsPageError: "",
+                isDataActualTrigger: !state.isDataActualTrigger
+            };
+
+        case TransactionActionTypes.DELETE_TRANSACTION_FAILURE:
+            return {
+                ...state,
+                transactionsPageError: action.payload
+            };
+
         default:
             return state
     }

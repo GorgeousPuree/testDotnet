@@ -7,6 +7,7 @@ import Row from "react-bootstrap/cjs/Row";
 import Col from "react-bootstrap/cjs/Col";
 
 import TransactionEditModalComponent from "../TransactionEditModalComponent/TransactionEditModalComponent";
+import TransactionDeleteModalComponent from "../TransactionDeleteModalComponent/TransactionDeleteModalComponent";
 
 const TransactionActionButtonsComponent = (props) => {
     const [showEdit, setShowEdit] = useState(false);
@@ -26,6 +27,7 @@ const TransactionActionButtonsComponent = (props) => {
             </Row>
         </Container>
         <TransactionEditModalComponent transaction={props.transaction} showEdit={showEdit} setShowEdit={setShowEdit}/>
+        <TransactionDeleteModalComponent transactionId={props.transaction.id} showDelete={showDelete} setShowDelete={setShowDelete}/>
     </div>
 };
 

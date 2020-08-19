@@ -118,6 +118,25 @@ export const TransactionReducer = (state = initialState, action) => {
                 transactionTypesFilter: action.payload
             };
 
+        case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_REQUEST:
+            return {
+                ...state
+            };
+
+        case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_SUCCESS:
+            return {
+                ...state,
+                transactionsPageError: "",
+                isDataActualTrigger: !state.isDataActualTrigger
+                //transactions: state.transactions.map(transaction => transaction.id === action.payload.transactionId ? {...transaction, status: action.payload.newStatus} : transaction)
+            };
+
+        case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_FAILURE:
+            return {
+                ...state,
+                transactionsPageError: action.payload
+            };
+
         default:
             return state
     }

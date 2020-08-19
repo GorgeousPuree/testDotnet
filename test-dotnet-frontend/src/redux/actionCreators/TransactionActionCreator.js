@@ -56,12 +56,15 @@ export const TransactionActionCreators = {
         payload: error
     }),
 
-    updateTransactionStatusRequest: () => ({
-        type: TransactionActionTypes.UPDATE_TRANSACTION_STATUS_REQUEST
+    updateTransactionStatusRequest: (transactionId, newStatus) => ({
+        type: TransactionActionTypes.UPDATE_TRANSACTION_STATUS_REQUEST,
+        newStatus: newStatus,
+        transactionId: transactionId
     }),
 
-    updateTransactionStatusSuccess: () => ({
-        type: TransactionActionTypes.UPDATE_TRANSACTION_STATUS_SUCCESS
+    updateTransactionStatusSuccess: (transactionId, newStatus) => ({
+        type: TransactionActionTypes.UPDATE_TRANSACTION_STATUS_SUCCESS,
+        payload: {transactionId: transactionId, newStatus: newStatus}
     }),
 
     updateTransactionStatusFailure: (error) => ({

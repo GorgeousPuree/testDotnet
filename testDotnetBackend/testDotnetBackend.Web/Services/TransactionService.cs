@@ -118,7 +118,6 @@ namespace testDotnetBackend.Web.Services
             {
                 _applicationContext.Transactions.Attach(foundTransaction);
                 foundTransaction.Status = status;
-                _applicationContext.Entry(foundTransaction).Property(transaction => transaction.Status).IsModified = true;
             }
 
             await _applicationContext.SaveChangesAsync();

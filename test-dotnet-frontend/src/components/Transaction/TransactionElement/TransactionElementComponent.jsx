@@ -12,7 +12,7 @@ const TransactionElementComponent = (props) => {
             <td>{props.transaction.clientName}</td>
             <td>${props.transaction.amount}</td>
             <td>
-                <TransactionActionButtonsComponent/>
+                <TransactionActionButtonsComponent transaction={props.transaction}/>
             </td>
         </tr>
     )

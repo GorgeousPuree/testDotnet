@@ -51,9 +51,9 @@ namespace testDotnetBackend.Web.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody, RegularExpression("(Completed|Pending|Cancelled)")] string status)
+        public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] TransactionModel transactionModel)
         {
-            var result = await _transactionService.UpdateTransactionStatusAsync(id, status);
+            var result = await _transactionService.UpdateTransactionStatusAsync(id, transactionModel.Status);
             return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
         }
 

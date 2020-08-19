@@ -2,7 +2,7 @@ import {fork} from 'redux-saga/effects'
 import {
     addImportedTransactionsWatcher, getExportedTransactionsWatcher,
     getTransactionPageWatcher,
-    getTransactionsCountWatcher
+    getTransactionsCountWatcher, updateTransactionStatusWatcher
 } from "./transactionSagas";
 
 export function* rootSaga() {
@@ -10,4 +10,5 @@ export function* rootSaga() {
     yield fork(getTransactionsCountWatcher);
     yield fork(addImportedTransactionsWatcher);
     yield fork(getExportedTransactionsWatcher);
+    yield fork(updateTransactionStatusWatcher);
 }

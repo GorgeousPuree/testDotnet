@@ -77,3 +77,18 @@ function* getExportedTransactionsSaga() {
 export function* getExportedTransactionsWatcher() {
     yield takeLatest(TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_REQUEST, getExportedTransactionsSaga);
 }
+
+function* updateTransactionStatusSaga(action) {
+    const newStatus = action.newStatus;
+    const transactionId = action.transactionId;
+    try {
+        yield call(TransactionApi.updateTransactionStatus, transactionId, newStatus);
+        yield put(TransactionActionCreators.updateTransactionStatusSuccess(transactionId, newStatus));
+    } catch (e) {
+        yield put(TransactionActionCreators.updateTransactionStatusFailure(e.message))
+    }
+}
+
+export function* updateTransactionStatusWatcher() {
+    yield takeLatest(TransactionActionTypes.UPDATE_TRANSACTION_STATUS_REQUEST, updateTransactionStatusSaga);
+}

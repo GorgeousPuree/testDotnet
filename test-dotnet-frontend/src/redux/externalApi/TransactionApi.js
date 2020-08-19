@@ -42,7 +42,7 @@ export const TransactionApi = {
             }
         }),
 
-    updateTransactionStatus: (id, status) => axios.put(transactionUrl + id + "/", status),
+    updateTransactionStatus: (id, status) => axios.put(transactionUrl + id, {status: status}),
 
     deleteTransaction: (id) => axios.delete(transactionUrl + id + "/")
 };

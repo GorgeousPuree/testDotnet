@@ -1,21 +1,20 @@
-import React from "react";
+import React from 'react';
 
-import Button from "react-bootstrap/cjs/Button";
-import TransactionActionButtonsComponent from "../TransactionActionButtons/TransactionActionButtonsComponents";
+import TransactionActionButtonsComponent from '../TransactionActionButtons/TransactionActionButtonsComponents';
 
-const TransactionElementComponent = (props) => {
-    return (
-        <tr>
-            <td>{props.transaction.id}</td>
-            <td>{props.transaction.status}</td>
-            <td>{props.transaction.type}</td>
-            <td>{props.transaction.clientName}</td>
-            <td>${props.transaction.amount}</td>
-            <td>
-                <TransactionActionButtonsComponent transaction={props.transaction}/>
-            </td>
-        </tr>
-    )
+const TransactionElementComponent = (prop) => {
+	return (
+		<tr>
+			<td>{prop.transaction.id}</td>
+			<td>{prop.transaction.status}</td>
+			<td>{prop.transaction.type}</td>
+			<td>{prop.transaction.clientName}</td>
+			<td>${prop.transaction.amount}</td>
+			<td>
+				<TransactionActionButtonsComponent transaction={prop.transaction} />
+			</td>
+		</tr>
+	);
 };
 
 export default TransactionElementComponent;

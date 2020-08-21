@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using testDotnetBackend.Web.Abstractions.Services;

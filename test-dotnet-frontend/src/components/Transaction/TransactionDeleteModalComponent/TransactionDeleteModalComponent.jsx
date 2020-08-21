@@ -1,34 +1,44 @@
-import React from "react";
-import {useDispatch} from "react-redux";
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
-import Modal from "react-bootstrap/cjs/Modal";
-import Button from "react-bootstrap/cjs/Button";
-import {TransactionActionCreators} from "../../../redux/actionCreators";
+import { TransactionActionCreators } from '../../../redux/actionCreators';
 
-const TransactionDeleteModalComponent = (props) => {
-    const dispatch = useDispatch();
+import Modal from 'react-bootstrap/cjs/Modal';
+import Button from 'react-bootstrap/cjs/Button';
 
-    const deleteTransaction = () => {
-        dispatch(TransactionActionCreators.deleteTransactionRequest(props.transactionId));
-        props.setShowDelete(false);
-    };
+const TransactionDeleteModalComponent = (prop) => {
+	const dispatch = useDispatch();
 
-    return (
-        <Modal show={props.showDelete} onHide={() => props.setShowDelete(false)} centered>
-            <Modal.Header closeButton>
-                <Modal.Title>Delete a transaction</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Are you sure you want to delete transaction?</Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={() => props.setShowDelete(false)}>
-                    No
-                </Button>
-                <Button variant="danger" onClick={deleteTransaction}>
-                    Yes
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    )
+	const deleteTransaction = () => {
+		dispatch(
+			TransactionActionCreators.deleteTransactionRequest(prop.transactionId)
+		);
+		prop.setShowDelete(false);
+	};
+
+	return (
+		<Modal
+			show={prop.showDelete}
+			onHide={() => prop.setShowDelete(false)}
+			centered
+		>
+			<Modal.Header closeButton>
+				<Modal.Title>Delete a transaction</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				Are you sure you want to delete this transaction (id ={' '}
+				{prop.transactionId})?
+			</Modal.Body>
+			<Modal.Footer>
+				<Button variant='secondary' onClick={() => prop.setShowDelete(false)}>
+					No
+				</Button>
+				<Button variant='danger' onClick={deleteTransaction}>
+					Yes
+				</Button>
+			</Modal.Footer>
+		</Modal>
+	);
 };
 
 export default TransactionDeleteModalComponent;

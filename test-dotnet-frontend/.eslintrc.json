@@ -1,0 +1,39 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es2020": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
+    },
+    "plugins": [
+        "react", "prettier"
+    ],
+    "rules": {
+        "no-unused-vars": "warn",
+        "prettier/prettier": [
+            1,
+            {
+                "printWidth": 80,
+                "trailingComma": "es5",
+                "semi": true,
+                "jsxSingleQuote": true,
+                "singleQuote": true,
+                "useTabs": true
+            }
+        ]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

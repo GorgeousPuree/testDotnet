@@ -1,1 +1,1 @@
-export * from './TransactionActionCreator'
+export * from './TransactionActionCreator';

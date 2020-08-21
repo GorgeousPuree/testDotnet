@@ -3,7 +3,7 @@ import { TransactionActionTypes } from '../actionTypes';
 export const TransactionActionCreators = {
 	addImportedTransactionsRequest: (csv) => ({
 		type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST,
-		//        csv: csv
+		csv: csv,
 	}),
 
 	addImportedTransactionsSuccess: () => ({
@@ -62,9 +62,8 @@ export const TransactionActionCreators = {
 		transactionId: transactionId,
 	}),
 
-	updateTransactionStatusSuccess: (transactionId, newStatus) => ({
+	updateTransactionStatusSuccess: () => ({
 		type: TransactionActionTypes.UPDATE_TRANSACTION_STATUS_SUCCESS,
-		//payload: {transactionId: transactionId, newStatus: newStatus}
 	}),
 
 	updateTransactionStatusFailure: (error) => ({

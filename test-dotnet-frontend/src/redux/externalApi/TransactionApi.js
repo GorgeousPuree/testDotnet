@@ -37,13 +37,16 @@ export const TransactionApi = {
 		}),
 
 	getTransactionsPage: (numberOfItemsPerPage, searchSettings) =>
-		axios.get(transactionUrl + 'page/' + searchSettings.pageNumber + '/', {
-			params: {
-				statuses: searchSettings.transactionFilters.transactionStatusesFilter,
-				types: searchSettings.transactionFilters.transactionTypesFilter,
-				numberOfItemsPerPage: numberOfItemsPerPage,
-			},
-		}),
+		axios.get(
+			transactionUrl + 'page/' + searchSettings.desiredPageNumber + '/',
+			{
+				params: {
+					statuses: searchSettings.transactionFilters.transactionStatusesFilter,
+					types: searchSettings.transactionFilters.transactionTypesFilter,
+					numberOfItemsPerPage: numberOfItemsPerPage,
+				},
+			}
+		),
 
 	updateTransactionStatus: (id, status) =>
 		axios.put(transactionUrl + id, { status: status }),

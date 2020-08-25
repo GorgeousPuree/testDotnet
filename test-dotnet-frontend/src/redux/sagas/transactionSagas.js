@@ -1,21 +1,25 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select, all, take } from 'redux-saga/effects';
 
 import { TransactionActionTypes } from '../actionTypes';
 import { TransactionActionCreators } from '../actionCreators';
 import { TransactionApi } from '../externalApi';
 import { AppConstants } from '../../config/constants';
 
-const getPageNumber = (state) => state.TransactionReducer.pageNumber;
+const getDesiredPageNumber = (state) =>
+	state.TransactionReducer.desiredPageNumber;
 const getFilters = (state) => ({
 	transactionStatusesFilter: state.TransactionReducer.transactionStatusesFilter,
 	transactionTypesFilter: state.TransactionReducer.transactionTypesFilter,
 });
+const getNumberOfTransactionsOnPage = (state) =>
+	state.TransactionReducer.numberOfTransactions;
 
 function* getTransactionPageSaga() {
 	const searchSettings = {
-		pageNumber: yield select(getPageNumber),
 		transactionFilters: yield select(getFilters),
+		desiredPageNumber: yield select(getDesiredPageNumber),
 	};
+
 	try {
 		const response = yield call(
 			TransactionApi.getTransactionsPage,
@@ -56,6 +60,38 @@ export function* getTransactionsCountWatcher() {
 	);
 }
 
+function* loadTransactionDataSaga() {
+	yield all([
+		put(TransactionActionCreators.getTransactionsPageRequest()),
+		put(TransactionActionCreators.getTransactionsCountRequest()),
+	]);
+
+	yield all([
+		take(TransactionActionTypes.GET_TRANSACTIONS_PAGE_SUCCESS),
+		take(TransactionActionTypes.GET_TRANSACTIONS_COUNT_SUCCESS),
+	]);
+
+	if ((yield select(getNumberOfTransactionsOnPage)) === 0)
+		yield put(
+			TransactionActionCreators.setDesiredPageNumber(
+				(yield select(getDesiredPageNumber)) - 1
+			)
+		);
+
+	yield put(
+		TransactionActionCreators.setActualPageNumber(
+			yield select(getDesiredPageNumber)
+		)
+	);
+}
+
+export function* loadTransactionDataWatcher() {
+	yield takeLatest(
+		TransactionActionTypes.LOAD_TRANSACTION_DATA,
+		loadTransactionDataSaga
+	);
+}
+
 function* addImportedTransactionsSaga(action) {
 	const csv = action.csv;
 	try {
@@ -63,6 +99,8 @@ function* addImportedTransactionsSaga(action) {
 		yield put(
 			TransactionActionCreators.addImportedTransactionsSuccess(response.data)
 		);
+		yield put(TransactionActionCreators.setDesiredPageNumber(1));
+		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
 		yield put(
 			TransactionActionCreators.addImportedTransactionsFailure(e.message)
@@ -123,6 +161,7 @@ function* updateTransactionStatusSaga(action) {
 				newStatus
 			)
 		);
+		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
 		yield put(
 			TransactionActionCreators.updateTransactionStatusFailure(e.message)
@@ -142,6 +181,7 @@ function* deleteTransactionSaga(action) {
 	try {
 		yield call(TransactionApi.deleteTransaction, transactionId);
 		yield put(TransactionActionCreators.deleteTransactionSuccess());
+		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
 		yield put(TransactionActionCreators.deleteTransactionFailure(e.message));
 	}
@@ -153,3 +193,24 @@ export function* deleteTransactionWatcher() {
 		deleteTransactionSaga
 	);
 }
+
+// function* changeCurrentPageSaga(action) {
+// 	yield all([
+// 		put(
+// 			TransactionActionCreators.getTransactionsPageRequest(action.newPageNumber)
+// 		),
+// 		put(TransactionActionCreators.getTransactionsCountRequest()),
+// 	]);
+// 	yield all([
+// 		take(TransactionActionTypes.GET_TRANSACTIONS_PAGE_SUCCESS),
+// 		take(TransactionActionTypes.GET_TRANSACTIONS_COUNT_SUCCESS),
+// 	]);
+// 	yield put(TransactionActionCreators.setActualPageNumber(action.newPageNumber));
+// }
+//
+// export function* changeCurrentPageWatcher() {
+// 	yield takeLatest(
+// 		TransactionActionTypes.SET_DESIRED_PAGE_NUMBER,
+// 		changeCurrentPageSaga
+// 	);
+// }

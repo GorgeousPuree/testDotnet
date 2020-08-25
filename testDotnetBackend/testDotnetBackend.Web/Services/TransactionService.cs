@@ -142,7 +142,7 @@ namespace testDotnetBackend.Web.Services
                 .Select(transaction => new Transaction { Id = transaction.Id })
                 .FirstOrDefaultAsync(transaction => transaction.Id == id);
 
-            if (foundTransaction == null) return new OperationResult(false, "Cannot find transaction with such id.");
+            if (foundTransaction == null) return new OperationResult(true, "Cannot find transaction with such id.");
 
             _applicationContext.Transactions.Remove(foundTransaction);
             await _applicationContext.SaveChangesAsync();

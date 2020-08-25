@@ -1,6 +1,10 @@
 import { TransactionActionTypes } from '../actionTypes';
 
 export const TransactionActionCreators = {
+	loadTransactionData: () => ({
+		type: TransactionActionTypes.LOAD_TRANSACTION_DATA,
+	}),
+
 	addImportedTransactionsRequest: (csv) => ({
 		type: TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST,
 		csv: csv,
@@ -42,8 +46,9 @@ export const TransactionActionCreators = {
 		payload: error,
 	}),
 
-	getTransactionsPageRequest: () => ({
+	getTransactionsPageRequest: (currentPageNumber) => ({
 		type: TransactionActionTypes.GET_TRANSACTIONS_PAGE_REQUEST,
+		currentPageNumber: currentPageNumber,
 	}),
 
 	getTransactionsPageSuccess: (transactions) => ({
@@ -93,5 +98,15 @@ export const TransactionActionCreators = {
 	setTransactionTypesFilter: (types) => ({
 		type: TransactionActionTypes.SET_TRANSACTION_TYPES_FILTER,
 		payload: types,
+	}),
+
+	setDesiredPageNumber: (desiredPageNumber) => ({
+		type: TransactionActionTypes.SET_DESIRED_PAGE_NUMBER,
+		payload: desiredPageNumber,
+	}),
+
+	setActualPageNumber: (actualPageNumber) => ({
+		type: TransactionActionTypes.SET_ACTUAL_PAGE_NUMBER,
+		payload: actualPageNumber,
 	}),
 };

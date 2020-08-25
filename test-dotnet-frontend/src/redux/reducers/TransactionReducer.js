@@ -3,6 +3,7 @@ import { AppConstants } from '../../config/constants';
 
 const initialState = {
 	transactions: [],
+	numberOfTransactions: 0,
 
 	isTransactionsPageLoading: true,
 	isTransactionsCountLoading: true,
@@ -13,16 +14,22 @@ const initialState = {
 	isTransactionImportFinished: false,
 	importError: '',
 
-	pageNumber: 1,
+	desiredPageNumber: 1,
+	actualPageNumber: 1,
 	pagesCount: 1,
 
 	transactionStatusesFilter: [],
 	transactionTypesFilter: [],
-	isDataActualTrigger: false,
+	//isDataActualTrigger: false,
 };
 
 export const TransactionReducer = (state = initialState, action) => {
 	switch (action.type) {
+		case TransactionActionTypes.LOAD_TRANSACTION_DATA:
+			return {
+				...state,
+			};
+
 		case TransactionActionTypes.ADD_IMPORTED_TRANSACTIONS_REQUEST:
 			return {
 				...state,
@@ -35,8 +42,8 @@ export const TransactionReducer = (state = initialState, action) => {
 				...state,
 				areTransactionsImporting: false,
 				isTransactionImportFinished: true,
-				pageNumber: 1,
-				isDataActualTrigger: !state.isDataActualTrigger,
+				//actualPageNumber: 1,
+				//isDataActualTrigger: !state.isDataActualTrigger,
 				importError: '',
 			};
 
@@ -75,6 +82,7 @@ export const TransactionReducer = (state = initialState, action) => {
 				...state,
 				isTransactionsPageLoading: false,
 				transactions: action.payload,
+				numberOfTransactions: action.payload.length,
 				transactionsPageError: '',
 			};
 
@@ -112,12 +120,22 @@ export const TransactionReducer = (state = initialState, action) => {
 			return {
 				...state,
 				transactionStatusesFilter: action.payload,
+				desiredPageNumber:
+					JSON.stringify(action.payload) !==
+					JSON.stringify(state.transactionStatusesFilter)
+						? 1
+						: state.desiredPageNumber,
 			};
 
 		case TransactionActionTypes.SET_TRANSACTION_TYPES_FILTER:
 			return {
 				...state,
 				transactionTypesFilter: action.payload,
+				desiredPageNumber:
+					JSON.stringify(action.payload) !==
+					JSON.stringify(state.transactionTypesFilter)
+						? 1
+						: state.desiredPageNumber,
 			};
 
 		case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_REQUEST:
@@ -129,7 +147,7 @@ export const TransactionReducer = (state = initialState, action) => {
 			return {
 				...state,
 				transactionsPageError: '',
-				isDataActualTrigger: !state.isDataActualTrigger,
+				//isDataActualTrigger: !state.isDataActualTrigger,
 				//transactions: state.transactions.map(transaction => transaction.id === action.payload.transactionId ? {...transaction, status: action.payload.newStatus} : transaction)
 			};
 
@@ -148,13 +166,29 @@ export const TransactionReducer = (state = initialState, action) => {
 			return {
 				...state,
 				transactionsPageError: '',
-				isDataActualTrigger: !state.isDataActualTrigger,
+				//isDataActualTrigger: !state.isDataActualTrigger,
+				// currentPageNumber:
+				// 	state.transactions.length < 2
+				// 		? state.currentPageNumber - 1
+				// 		: state.currentPageNumber,
 			};
 
 		case TransactionActionTypes.DELETE_TRANSACTION_FAILURE:
 			return {
 				...state,
 				transactionsPageError: action.payload,
+			};
+
+		case TransactionActionTypes.SET_DESIRED_PAGE_NUMBER:
+			return {
+				...state,
+				desiredPageNumber: action.payload,
+			};
+
+		case TransactionActionTypes.SET_ACTUAL_PAGE_NUMBER:
+			return {
+				...state,
+				actualPageNumber: action.payload,
 			};
 
 		default:

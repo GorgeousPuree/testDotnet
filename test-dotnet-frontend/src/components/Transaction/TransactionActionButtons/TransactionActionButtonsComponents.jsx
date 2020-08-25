@@ -5,8 +5,8 @@ import Container from 'react-bootstrap/cjs/Container';
 import Row from 'react-bootstrap/cjs/Row';
 import Col from 'react-bootstrap/cjs/Col';
 
-import TransactionEditModalComponent from '../TransactionEditModalComponent/TransactionEditModalComponent';
-import TransactionDeleteModalComponent from '../TransactionDeleteModalComponent/TransactionDeleteModalComponent';
+import TransactionEditModalComponent from '../TransactionEditModal/TransactionEditModalComponent';
+import TransactionDeleteModalComponent from '../TransactionDeleteModal/TransactionDeleteModalComponent';
 
 const TransactionActionButtonsComponent = (prop) => {
 	const [showEdit, setShowEdit] = useState(false);

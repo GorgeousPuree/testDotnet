@@ -6,6 +6,7 @@ import {
 	getTransactionPageWatcher,
 	getTransactionsCountWatcher,
 	updateTransactionStatusWatcher,
+	loadTransactionDataWatcher,
 } from './transactionSagas';
 
 export function* rootSaga() {
@@ -15,4 +16,5 @@ export function* rootSaga() {
 	yield fork(getExportedTransactionsWatcher);
 	yield fork(updateTransactionStatusWatcher);
 	yield fork(deleteTransactionWatcher);
+	yield fork(loadTransactionDataWatcher);
 }

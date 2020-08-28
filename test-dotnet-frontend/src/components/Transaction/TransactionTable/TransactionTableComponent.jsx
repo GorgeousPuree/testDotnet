@@ -8,17 +8,14 @@ const TransactionTableComponent = () => {
 	const transactions = useSelector(
 		(state) => state.TransactionReducer.transactions
 	);
-	const isTransactionsPageLoading = useSelector(
-		(state) => state.TransactionReducer.isTransactionsPageLoading
-	);
-	const isTransactionsCountLoading = useSelector(
-		(state) => state.TransactionReducer.isTransactionsCountLoading
+	const isFirstLoad = useSelector(
+		(state) => state.TransactionReducer.isFirstLoad
 	);
 
-	return isTransactionsPageLoading || isTransactionsCountLoading ? (
+	return isFirstLoad ? (
 		<div className={'text-center'}>Loading</div>
 	) : (
-		<Table size={'sm'} responsive={true} striped bordered hover>
+		<Table responsive={true} striped bordered hover>
 			<thead>
 				<tr>
 					<th>Id</th>

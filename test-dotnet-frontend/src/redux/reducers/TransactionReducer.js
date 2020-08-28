@@ -7,6 +7,7 @@ const initialState = {
 
 	isTransactionsPageLoading: true,
 	isTransactionsCountLoading: true,
+	isFirstLoad: true,
 	transactionsPageError: '',
 	transactionsCountError: '',
 
@@ -20,7 +21,6 @@ const initialState = {
 
 	transactionStatusesFilter: [],
 	transactionTypesFilter: [],
-	//isDataActualTrigger: false,
 };
 
 export const TransactionReducer = (state = initialState, action) => {
@@ -42,8 +42,6 @@ export const TransactionReducer = (state = initialState, action) => {
 				...state,
 				areTransactionsImporting: false,
 				isTransactionImportFinished: true,
-				//actualPageNumber: 1,
-				//isDataActualTrigger: !state.isDataActualTrigger,
 				importError: '',
 			};
 
@@ -84,6 +82,7 @@ export const TransactionReducer = (state = initialState, action) => {
 				transactions: action.payload,
 				numberOfTransactions: action.payload.length,
 				transactionsPageError: '',
+				isFirstLoad: false,
 			};
 
 		case TransactionActionTypes.GET_TRANSACTIONS_PAGE_FAILURE:
@@ -147,8 +146,6 @@ export const TransactionReducer = (state = initialState, action) => {
 			return {
 				...state,
 				transactionsPageError: '',
-				//isDataActualTrigger: !state.isDataActualTrigger,
-				//transactions: state.transactions.map(transaction => transaction.id === action.payload.transactionId ? {...transaction, status: action.payload.newStatus} : transaction)
 			};
 
 		case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_FAILURE:
@@ -166,11 +163,6 @@ export const TransactionReducer = (state = initialState, action) => {
 			return {
 				...state,
 				transactionsPageError: '',
-				//isDataActualTrigger: !state.isDataActualTrigger,
-				// currentPageNumber:
-				// 	state.transactions.length < 2
-				// 		? state.currentPageNumber - 1
-				// 		: state.currentPageNumber,
 			};
 
 		case TransactionActionTypes.DELETE_TRANSACTION_FAILURE:

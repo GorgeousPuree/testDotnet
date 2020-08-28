@@ -7,10 +7,18 @@ import Col from 'react-bootstrap/cjs/Col';
 
 import TransactionEditModalComponent from '../TransactionEditModal/TransactionEditModalComponent';
 import TransactionDeleteModalComponent from '../TransactionDeleteModal/TransactionDeleteModalComponent';
+import { useSelector } from 'react-redux';
 
 const TransactionActionButtonsComponent = (prop) => {
 	const [showEdit, setShowEdit] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
+
+	const isTransactionsPageLoading = useSelector(
+		(state) => state.TransactionReducer.isTransactionsPageLoading
+	);
+	const isTransactionsCountLoading = useSelector(
+		(state) => state.TransactionReducer.isTransactionsCountLoading
+	);
 
 	return (
 		<div>
@@ -18,6 +26,7 @@ const TransactionActionButtonsComponent = (prop) => {
 				<Row noGutters={true} className={'justify-content-between'}>
 					<Col sm={12} md={5}>
 						<Button
+							disabled={isTransactionsPageLoading || isTransactionsCountLoading}
 							className={'btn-block'}
 							variant={'info'}
 							onClick={() => setShowEdit(true)}
@@ -27,6 +36,7 @@ const TransactionActionButtonsComponent = (prop) => {
 					</Col>
 					<Col sm={12} md={5}>
 						<Button
+							disabled={isTransactionsPageLoading || isTransactionsCountLoading}
 							className={'btn-block'}
 							variant={'danger'}
 							onClick={() => setShowDelete(true)}

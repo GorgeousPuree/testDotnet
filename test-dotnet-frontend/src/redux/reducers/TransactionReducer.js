@@ -25,6 +25,9 @@ const initialState = {
 
 	transactionStatusesFilter: [],
 	transactionTypesFilter: [],
+
+	updateTransactionError: '',
+	deleteTransactionError: '',
 };
 
 export const TransactionReducer = (state = initialState, action) => {
@@ -156,13 +159,13 @@ export const TransactionReducer = (state = initialState, action) => {
 		case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_SUCCESS:
 			return {
 				...state,
-				transactionsPageError: '',
+				updateTransactionError: '',
 			};
 
 		case TransactionActionTypes.UPDATE_TRANSACTION_STATUS_FAILURE:
 			return {
 				...state,
-				transactionsPageError: action.payload,
+				updateTransactionError: action.payload,
 			};
 
 		case TransactionActionTypes.DELETE_TRANSACTION_REQUEST:
@@ -173,13 +176,13 @@ export const TransactionReducer = (state = initialState, action) => {
 		case TransactionActionTypes.DELETE_TRANSACTION_SUCCESS:
 			return {
 				...state,
-				transactionsPageError: '',
+				deleteTransactionError: '',
 			};
 
 		case TransactionActionTypes.DELETE_TRANSACTION_FAILURE:
 			return {
 				...state,
-				transactionsPageError: action.payload,
+				deleteTransactionError: action.payload,
 			};
 
 		case TransactionActionTypes.SET_DESIRED_PAGE_NUMBER:

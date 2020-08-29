@@ -27,7 +27,14 @@ const TransactionToastsComponent = () => {
 	const transactionsPageError = useSelector(
 		(state) => state.TransactionReducer.transactionsPageError
 	);
+	const updateTransactionError = useSelector(
+		(state) => state.TransactionReducer.updateTransactionError
+	);
+	const deleteTransactionError = useSelector(
+		(state) => state.TransactionReducer.deleteTransactionError
+	);
 
+	// TODO: rewrite repeating code
 	const [showIsImportRequested, setIsImportRequested] = useState(false);
 	const [showIsImportSucceeded, setIsImportSucceeded] = useState(false);
 	const [showIsImportErrorOccurred, setIsImportErrorOccurred] = useState(false);
@@ -37,6 +44,24 @@ const TransactionToastsComponent = () => {
 	const [showIsExportSucceeded, setIsExportSucceeded] = useState(false);
 	const [showIsExportErrorOccurred, setIsExportErrorOccurred] = useState(false);
 	const [showExportErrorDescription, setExportErrorDescription] = useState('');
+
+	const [
+		showIsUpdateTransactionErrorOccurred,
+		setIsUpdateTransactionErrorOccurred,
+	] = useState(false);
+	const [
+		showUpdateTransactionErrorDescription,
+		setUpdateTransactionErrorDescription,
+	] = useState('');
+
+	const [
+		showIsDeleteTransactionErrorOccurred,
+		setIsDeleteTransactionErrorOccurred,
+	] = useState(false);
+	const [
+		showDeleteTransactionErrorDescription,
+		setDeleteTransactionErrorDescription,
+	] = useState('');
 
 	const [
 		showIsTransactionsPageErrorOccurred,
@@ -84,23 +109,39 @@ const TransactionToastsComponent = () => {
 		}
 	}, [transactionsPageError]);
 
+	useEffect(() => {
+		if (updateTransactionError !== '') {
+			setUpdateTransactionErrorDescription(updateTransactionError);
+			setIsUpdateTransactionErrorOccurred(true);
+		}
+	}, [updateTransactionError]);
+
+	useEffect(() => {
+		if (deleteTransactionError !== '') {
+			setDeleteTransactionErrorDescription(deleteTransactionError);
+			setIsDeleteTransactionErrorOccurred(true);
+		}
+	}, [deleteTransactionError]);
+
+	const commonToastStyle = {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+	};
+
 	return (
 		<div
 			style={{
 				position: 'absolute',
 				top: 15,
-				right: 15,
+				right: 40,
 			}}
 		>
 			{/*Import toasts*/}
 			<Toast
 				onClose={() => setIsImportRequested(false)}
 				show={showIsImportRequested}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Import</strong>
@@ -113,11 +154,7 @@ const TransactionToastsComponent = () => {
 				show={showIsImportSucceeded}
 				autohide
 				delay={4000}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Import</strong>
@@ -128,11 +165,7 @@ const TransactionToastsComponent = () => {
 			<Toast
 				onClose={() => setIsImportErrorOccurred(false)}
 				show={showIsImportErrorOccurred}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Import</strong>
@@ -144,11 +177,7 @@ const TransactionToastsComponent = () => {
 			<Toast
 				onClose={() => setIsExportRequested(false)}
 				show={showIsExportRequested}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Export</strong>
@@ -161,11 +190,7 @@ const TransactionToastsComponent = () => {
 				show={showIsExportSucceeded}
 				autohide
 				delay={4000}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Export</strong>
@@ -176,11 +201,7 @@ const TransactionToastsComponent = () => {
 			<Toast
 				onClose={() => setIsExportErrorOccurred(false)}
 				show={showIsExportErrorOccurred}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Export</strong>
@@ -192,16 +213,36 @@ const TransactionToastsComponent = () => {
 			<Toast
 				onClose={() => setIsTransactionsPageErrorOccurred(false)}
 				show={showIsTransactionsPageErrorOccurred}
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
+				style={commonToastStyle}
 			>
 				<Toast.Header>
 					<strong className='mr-auto'>Loading transactions</strong>
 				</Toast.Header>
 				<Toast.Body>Error! {showTransactionsPageErrorDescription}.</Toast.Body>
+			</Toast>
+
+			{/*	Update transaction toasts*/}
+			<Toast
+				onClose={() => setIsUpdateTransactionErrorOccurred(false)}
+				show={showIsUpdateTransactionErrorOccurred}
+				style={commonToastStyle}
+			>
+				<Toast.Header>
+					<strong className='mr-auto'>Updating transaction</strong>
+				</Toast.Header>
+				<Toast.Body>Error! {showUpdateTransactionErrorDescription}.</Toast.Body>
+			</Toast>
+
+			{/*	Delete transaction toasts*/}
+			<Toast
+				onClose={() => setIsDeleteTransactionErrorOccurred(false)}
+				show={showIsDeleteTransactionErrorOccurred}
+				style={commonToastStyle}
+			>
+				<Toast.Header>
+					<strong className='mr-auto'>Deleting transaction</strong>
+				</Toast.Header>
+				<Toast.Body>Error! {showDeleteTransactionErrorDescription}.</Toast.Body>
 			</Toast>
 		</div>
 	);

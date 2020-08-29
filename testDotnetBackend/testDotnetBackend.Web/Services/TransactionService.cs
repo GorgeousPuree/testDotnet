@@ -172,7 +172,7 @@ namespace testDotnetBackend.Web.Services
                         if (!transactionModelBuilderResult.Success)
                             return new OperationDataResult<List<Transaction>>(
                                 false,
-                                transactionModelBuilderResult.Message + $" Failed at line {currentLine}.");
+                                transactionModelBuilderResult.Message + $" Failed at line {currentLine}");
 
                         transactions.Add(transactionModelBuilderResult.Model);
                         currentLine++;

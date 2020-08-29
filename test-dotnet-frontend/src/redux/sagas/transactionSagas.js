@@ -30,14 +30,10 @@ function* getTransactionPageSaga() {
 			TransactionActionCreators.getTransactionsPageSuccess(response.data)
 		);
 	} catch (e) {
-		let errorMessage;
-		if (e.response && e.response.data.errors && e.response.data.errors.csv)
-			errorMessage = e.response.data.errors.csv[0];
-		else if (e.response && e.response.data) errorMessage = e.response.data;
-		else errorMessage = e.message;
-
 		yield put(
-			TransactionActionCreators.getTransactionsPageFailure(errorMessage)
+			TransactionActionCreators.getTransactionsPageFailure(
+				errorDescriptionCreator(e)
+			)
 		);
 	}
 }
@@ -57,14 +53,10 @@ function* getTransactionsCountSaga() {
 			TransactionActionCreators.getTransactionsCountSuccess(response.data)
 		);
 	} catch (e) {
-		let errorMessage;
-		if (e.response && e.response.data.errors && e.response.data.errors.csv)
-			errorMessage = e.response.data.errors.csv[0];
-		else if (e.response && e.response.data) errorMessage = e.response.data;
-		else errorMessage = e.message;
-
 		yield put(
-			TransactionActionCreators.getTransactionsCountFailure(errorMessage)
+			TransactionActionCreators.getTransactionsCountFailure(
+				errorDescriptionCreator(e)
+			)
 		);
 	}
 }
@@ -118,14 +110,10 @@ function* addImportedTransactionsSaga(action) {
 		yield put(TransactionActionCreators.setDesiredPageNumber(1));
 		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
-		let errorMessage;
-		if (e.response && e.response.data.errors && e.response.data.errors.csv)
-			errorMessage = e.response.data.errors.csv[0];
-		else if (e.response && e.response.data) errorMessage = e.response.data;
-		else errorMessage = e.message;
-
 		yield put(
-			TransactionActionCreators.addImportedTransactionsFailure(errorMessage)
+			TransactionActionCreators.addImportedTransactionsFailure(
+				errorDescriptionCreator(e)
+			)
 		);
 	}
 }
@@ -155,14 +143,10 @@ function* getExportedTransactionsSaga() {
 
 		yield put(TransactionActionCreators.getExportedTransactionsSuccess());
 	} catch (e) {
-		let errorMessage;
-		if (e.response && e.response.data.errors && e.response.data.errors.csv)
-			errorMessage = e.response.data.errors.csv[0];
-		else if (e.response && e.response.data) errorMessage = e.response.data;
-		else errorMessage = e.message;
-
 		yield put(
-			TransactionActionCreators.getExportedTransactionsFailure(errorMessage)
+			TransactionActionCreators.getExportedTransactionsFailure(
+				errorDescriptionCreator(e)
+			)
 		);
 	}
 }
@@ -191,14 +175,10 @@ function* updateTransactionStatusSaga(action) {
 		);
 		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
-		let errorMessage;
-		if (e.response && e.response.data.errors && e.response.data.errors.csv)
-			errorMessage = e.response.data.errors.csv[0];
-		else if (e.response && e.response.data) errorMessage = e.response.data;
-		else errorMessage = e.message;
-
 		yield put(
-			TransactionActionCreators.updateTransactionStatusFailure(errorMessage)
+			TransactionActionCreators.updateTransactionStatusFailure(
+				errorDescriptionCreator(e)
+			)
 		);
 	}
 }
@@ -217,13 +197,11 @@ function* deleteTransactionSaga(action) {
 		yield put(TransactionActionCreators.deleteTransactionSuccess());
 		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
-		let errorMessage;
-		if (e.response && e.response.data.errors && e.response.data.errors.csv)
-			errorMessage = e.response.data.errors.csv[0];
-		else if (e.response && e.response.data) errorMessage = e.response.data;
-		else errorMessage = e.message;
-
-		yield put(TransactionActionCreators.deleteTransactionFailure(errorMessage));
+		yield put(
+			TransactionActionCreators.deleteTransactionFailure(
+				errorDescriptionCreator(e)
+			)
+		);
 	}
 }
 
@@ -232,4 +210,15 @@ export function* deleteTransactionWatcher() {
 		TransactionActionTypes.DELETE_TRANSACTION_REQUEST,
 		deleteTransactionSaga
 	);
+}
+
+function errorDescriptionCreator(e) {
+	let errorMessage;
+	if (e.response && e.response.data.errors && e.response.data.errors)
+		Object.keys(e.response.data.errors).forEach((key) => {
+			errorMessage = [errorMessage, e.response.data.errors[key]].join('\n');
+		});
+	else if (e.response && e.response.data) errorMessage = e.response.data;
+	else errorMessage = e.message;
+	return errorMessage;
 }

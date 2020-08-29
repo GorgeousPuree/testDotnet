@@ -25,6 +25,10 @@ namespace testDotnetBackend.Web
             services.AddDbContext<ApplicationContext>(options =>
             { options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")); });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Asp.Net Core backend", Version = "v1" });
+            });
             services.AddCors();
             services.AddControllers();
 
@@ -53,7 +57,10 @@ namespace testDotnetBackend.Web
                 .AllowAnyHeader();
             });
 
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1");
+            });
             app.UseRouting();
 
             app.UseAuthorization();

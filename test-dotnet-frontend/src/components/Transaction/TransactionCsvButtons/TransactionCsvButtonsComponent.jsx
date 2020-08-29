@@ -13,6 +13,7 @@ const TransactionCsvButtonsComponent = () => {
 	const importCsv = () => {
 		csvFileRef.current.click();
 	};
+
 	const importCsvOnChange = (e) => {
 		if (e.target.files[0] === undefined) return;
 
@@ -22,7 +23,6 @@ const TransactionCsvButtonsComponent = () => {
 			TransactionActionCreators.addImportedTransactionsRequest(formData)
 		);
 	};
-
 	const exportCsv = () => {
 		dispatch(TransactionActionCreators.getExportedTransactionsRequest());
 	};

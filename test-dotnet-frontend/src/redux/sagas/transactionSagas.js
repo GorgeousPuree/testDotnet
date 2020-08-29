@@ -30,7 +30,15 @@ function* getTransactionPageSaga() {
 			TransactionActionCreators.getTransactionsPageSuccess(response.data)
 		);
 	} catch (e) {
-		yield put(TransactionActionCreators.getTransactionsPageFailure(e.message));
+		let errorMessage;
+		if (e.response && e.response.data.errors && e.response.data.errors.csv)
+			errorMessage = e.response.data.errors.csv[0];
+		else if (e.response && e.response.data) errorMessage = e.response.data;
+		else errorMessage = e.message;
+
+		yield put(
+			TransactionActionCreators.getTransactionsPageFailure(errorMessage)
+		);
 	}
 }
 
@@ -49,7 +57,15 @@ function* getTransactionsCountSaga() {
 			TransactionActionCreators.getTransactionsCountSuccess(response.data)
 		);
 	} catch (e) {
-		yield put(TransactionActionCreators.getTransactionsCountFailure(e.message));
+		let errorMessage;
+		if (e.response && e.response.data.errors && e.response.data.errors.csv)
+			errorMessage = e.response.data.errors.csv[0];
+		else if (e.response && e.response.data) errorMessage = e.response.data;
+		else errorMessage = e.message;
+
+		yield put(
+			TransactionActionCreators.getTransactionsCountFailure(errorMessage)
+		);
 	}
 }
 
@@ -102,8 +118,14 @@ function* addImportedTransactionsSaga(action) {
 		yield put(TransactionActionCreators.setDesiredPageNumber(1));
 		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
+		let errorMessage;
+		if (e.response && e.response.data.errors && e.response.data.errors.csv)
+			errorMessage = e.response.data.errors.csv[0];
+		else if (e.response && e.response.data) errorMessage = e.response.data;
+		else errorMessage = e.message;
+
 		yield put(
-			TransactionActionCreators.addImportedTransactionsFailure(e.message)
+			TransactionActionCreators.addImportedTransactionsFailure(errorMessage)
 		);
 	}
 }
@@ -133,8 +155,14 @@ function* getExportedTransactionsSaga() {
 
 		yield put(TransactionActionCreators.getExportedTransactionsSuccess());
 	} catch (e) {
+		let errorMessage;
+		if (e.response && e.response.data.errors && e.response.data.errors.csv)
+			errorMessage = e.response.data.errors.csv[0];
+		else if (e.response && e.response.data) errorMessage = e.response.data;
+		else errorMessage = e.message;
+
 		yield put(
-			TransactionActionCreators.getExportedTransactionsFailure(e.message)
+			TransactionActionCreators.getExportedTransactionsFailure(errorMessage)
 		);
 	}
 }
@@ -163,8 +191,14 @@ function* updateTransactionStatusSaga(action) {
 		);
 		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
+		let errorMessage;
+		if (e.response && e.response.data.errors && e.response.data.errors.csv)
+			errorMessage = e.response.data.errors.csv[0];
+		else if (e.response && e.response.data) errorMessage = e.response.data;
+		else errorMessage = e.message;
+
 		yield put(
-			TransactionActionCreators.updateTransactionStatusFailure(e.message)
+			TransactionActionCreators.updateTransactionStatusFailure(errorMessage)
 		);
 	}
 }
@@ -183,7 +217,13 @@ function* deleteTransactionSaga(action) {
 		yield put(TransactionActionCreators.deleteTransactionSuccess());
 		yield put(TransactionActionCreators.loadTransactionData());
 	} catch (e) {
-		yield put(TransactionActionCreators.deleteTransactionFailure(e.message));
+		let errorMessage;
+		if (e.response && e.response.data.errors && e.response.data.errors.csv)
+			errorMessage = e.response.data.errors.csv[0];
+		else if (e.response && e.response.data) errorMessage = e.response.data;
+		else errorMessage = e.message;
+
+		yield put(TransactionActionCreators.deleteTransactionFailure(errorMessage));
 	}
 }
 
@@ -193,24 +233,3 @@ export function* deleteTransactionWatcher() {
 		deleteTransactionSaga
 	);
 }
-
-// function* changeCurrentPageSaga(action) {
-// 	yield all([
-// 		put(
-// 			TransactionActionCreators.getTransactionsPageRequest(action.newPageNumber)
-// 		),
-// 		put(TransactionActionCreators.getTransactionsCountRequest()),
-// 	]);
-// 	yield all([
-// 		take(TransactionActionTypes.GET_TRANSACTIONS_PAGE_SUCCESS),
-// 		take(TransactionActionTypes.GET_TRANSACTIONS_COUNT_SUCCESS),
-// 	]);
-// 	yield put(TransactionActionCreators.setActualPageNumber(action.newPageNumber));
-// }
-//
-// export function* changeCurrentPageWatcher() {
-// 	yield takeLatest(
-// 		TransactionActionTypes.SET_DESIRED_PAGE_NUMBER,
-// 		changeCurrentPageSaga
-// 	);
-// }

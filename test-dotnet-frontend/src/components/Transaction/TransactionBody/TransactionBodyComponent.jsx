@@ -12,6 +12,7 @@ import TransactionFiltersComponent from '../TransactionFilters/TransactionFilter
 import TransactionCsvButtonsComponent from '../TransactionCsvButtons/TransactionCsvButtonsComponent';
 import TransactionTableComponent from '../TransactionTable/TransactionTableComponent';
 import TransactionPageChangerComponent from '../TransactionPageChanger/TransactionPageChangerComponent';
+import TransactionToastsComponent from '../TransactionToasts/TransactionToastsComponent';
 
 const TransactionBodyComponent = () => {
 	const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const TransactionBodyComponent = () => {
 			</Container>
 			<TransactionTableComponent />
 			<TransactionPageChangerComponent />
+			<TransactionToastsComponent />
 		</div>
 	);
 };

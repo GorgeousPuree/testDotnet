@@ -15,6 +15,10 @@ const initialState = {
 	isTransactionImportFinished: false,
 	importError: '',
 
+	areTransactionsExporting: false,
+	isTransactionExportFinished: false,
+	exportError: '',
+
 	desiredPageNumber: 1,
 	actualPageNumber: 1,
 	pagesCount: 1,
@@ -53,20 +57,27 @@ export const TransactionReducer = (state = initialState, action) => {
 				importError: action.payload,
 			};
 
-		// TODO: process all possible outcomes
 		case TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_REQUEST:
 			return {
 				...state,
+				areTransactionsExporting: true,
+				isTransactionExportFinished: false,
 			};
 
 		case TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_SUCCESS:
 			return {
 				...state,
+				areTransactionsExporting: false,
+				isTransactionExportFinished: true,
+				exportError: '',
 			};
 
 		case TransactionActionTypes.GET_EXPORTED_TRANSACTIONS_FAILURE:
 			return {
 				...state,
+				areTransactionsExporting: false,
+				isTransactionExportFinished: false,
+				exportError: action.payload,
 			};
 
 		case TransactionActionTypes.GET_TRANSACTIONS_PAGE_REQUEST:

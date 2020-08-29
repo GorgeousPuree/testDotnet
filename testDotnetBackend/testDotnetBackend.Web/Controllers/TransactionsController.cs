@@ -19,7 +19,7 @@ namespace testDotnetBackend.Web.Controllers
             _transactionService = transactionService;
         }
 
-        [HttpGet("page/{pageNumber}")]
+        [HttpGet("page/{PageNumber}/")]
         public async Task<IActionResult> GetTransactionsPage([FromQuery] GetTransactionsPageModel getTransactionsPageModel)
         {
             var result = await _transactionService.GetTransactionsPageAsync(getTransactionsPageModel);
@@ -49,14 +49,14 @@ namespace testDotnetBackend.Web.Controllers
             return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] TransactionModel transactionModel)
+        [HttpPut("{id}/")]
+        public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody, AllowedStatus(ErrorMessage = "Unknown transaction status.")] string status)
         {
-            var result = await _transactionService.UpdateTransactionStatusAsync(id, transactionModel.Status);
+            var result = await _transactionService.UpdateTransactionStatusAsync(id, status);
             return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/")]
         public async Task<IActionResult> DeleteTransaction(int id)
         {
             var result = await _transactionService.DeleteTransactionAsync(id);

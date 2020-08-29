@@ -49,7 +49,11 @@ export const TransactionApi = {
 		),
 
 	updateTransactionStatus: (id, status) =>
-		axios.put(transactionUrl + id, { status: status }),
+		axios.put(transactionUrl + id, '"' + status + '"', {
+			headers: {
+				'Content-type': 'application/json',
+			},
+		}),
 
 	deleteTransaction: (id) => axios.delete(transactionUrl + id),
 };

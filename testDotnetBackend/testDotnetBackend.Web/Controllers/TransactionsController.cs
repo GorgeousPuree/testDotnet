@@ -43,7 +43,7 @@ namespace testDotnetBackend.Web.Controllers
         [HttpPost("import")]
         public async Task<IActionResult> AddImportedTransactions([FromForm(Name = "csv"),
                                                                  AllowedExtensions(new string[] { ".xlsx", ".xls", ".csv" },
-                                                                 ErrorMessage = "Not supported file extension.")] IFormFile formFile)
+                                                                 ErrorMessage = "Not supported file extension")] IFormFile formFile)
         {
             var result = await _transactionService.ImportTransactionsAsync(formFile);
             return result.Success ? (IActionResult)Ok() : BadRequest(result.Message);

@@ -124,7 +124,7 @@ namespace testDotnetBackend.Web.Services
                 .Select(transaction => new Transaction { Id = transaction.Id, Status = transaction.Status })
                 .FirstOrDefaultAsync(transaction => transaction.Id == id);
 
-            if (foundTransaction == null) return new OperationResult(false, "Cannot find transaction with such id.");
+            if (foundTransaction == null) return new OperationResult(false, "Cannot find transaction with such id");
 
             if (foundTransaction.Status != status)
             {
@@ -142,7 +142,7 @@ namespace testDotnetBackend.Web.Services
                 .Select(transaction => new Transaction { Id = transaction.Id })
                 .FirstOrDefaultAsync(transaction => transaction.Id == id);
 
-            if (foundTransaction == null) return new OperationResult(true, "Cannot find transaction with such id.");
+            if (foundTransaction == null) return new OperationResult(true, "Cannot find transaction with such id");
 
             _applicationContext.Transactions.Remove(foundTransaction);
             await _applicationContext.SaveChangesAsync();
@@ -179,7 +179,7 @@ namespace testDotnetBackend.Web.Services
                     }
                 }
             }
-            catch { return new OperationDataResult<List<Transaction>>(false, "Cannot read uploaded file."); }
+            catch { return new OperationDataResult<List<Transaction>>(false, "Cannot read uploaded file"); }
             #endregion
 
             return new OperationDataResult<List<Transaction>>(true, transactions);

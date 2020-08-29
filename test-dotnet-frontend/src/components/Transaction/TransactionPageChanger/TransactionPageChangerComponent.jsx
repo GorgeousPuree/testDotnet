@@ -67,10 +67,12 @@ const TransactionPageChangerComponent = () => {
 					rangeWithDots.push(
 						isEllipsisOne ? (
 							<Pagination.Ellipsis
+								key={previousElement + 1}
 								onClick={() => changePage(Math.ceil((i - previousElement) / 2))}
 							/>
 						) : (
 							<Pagination.Ellipsis
+								key={previousElement + 1}
 								onClick={() =>
 									changePage(
 										previousElement + Math.ceil((i - previousElement) / 2)

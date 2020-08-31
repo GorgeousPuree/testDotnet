@@ -19,6 +19,12 @@ const TransactionActionButtonsComponent = (prop) => {
 	const isTransactionsCountLoading = useSelector(
 		(state) => state.TransactionReducer.isTransactionsCountLoading
 	);
+	const areTransactionsImporting = useSelector(
+		(state) => state.TransactionReducer.areTransactionsImporting
+	);
+	const areTransactionsExporting = useSelector(
+		(state) => state.TransactionReducer.areTransactionsExporting
+	);
 
 	return (
 		<div>
@@ -26,7 +32,12 @@ const TransactionActionButtonsComponent = (prop) => {
 				<Row noGutters={true} className={'justify-content-between'}>
 					<Col sm={12} md={5}>
 						<Button
-							disabled={isTransactionsPageLoading || isTransactionsCountLoading}
+							disabled={
+								isTransactionsPageLoading ||
+								isTransactionsCountLoading ||
+								areTransactionsImporting ||
+								areTransactionsExporting
+							}
 							className={'btn-block'}
 							variant={'info'}
 							onClick={() => setShowEdit(true)}
@@ -36,7 +47,12 @@ const TransactionActionButtonsComponent = (prop) => {
 					</Col>
 					<Col sm={12} md={5}>
 						<Button
-							disabled={isTransactionsPageLoading || isTransactionsCountLoading}
+							disabled={
+								isTransactionsPageLoading ||
+								isTransactionsCountLoading ||
+								areTransactionsImporting ||
+								areTransactionsExporting
+							}
 							className={'btn-block'}
 							variant={'danger'}
 							onClick={() => setShowDelete(true)}

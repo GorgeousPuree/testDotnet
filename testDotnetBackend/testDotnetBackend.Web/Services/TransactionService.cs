@@ -32,6 +32,7 @@ namespace testDotnetBackend.Web.Services
                     transactionFiltersModel.Statuses.Contains(transaction.Status)) &&
                     (transactionFiltersModel.Types == null ? true :
                     transactionFiltersModel.Types.Contains(transaction.Type)))
+                .AsNoTracking()
                 .CountAsync();
 
             return new OperationDataResult<int>(true, transactionsCount);
@@ -47,6 +48,7 @@ namespace testDotnetBackend.Web.Services
                 .Where(transaction =>
                       (getTransactionsPageModel.Types == null) ? true
                       : getTransactionsPageModel.Types.Contains(transaction.Type))
+                .AsNoTracking()
                 .OrderBy(transaction => transaction.Id)
                 .Skip((getTransactionsPageModel.PageNumber - 1) * getTransactionsPageModel.NumberOfItemsPerPage)
                 .Take(getTransactionsPageModel.NumberOfItemsPerPage)
@@ -76,6 +78,7 @@ namespace testDotnetBackend.Web.Services
             {
                 var foundTransaction = await _applicationContext.Transactions
                     .Select(transaction => new Transaction { Id = transaction.Id, Status = transaction.Status })
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(transaction => transaction.Id == pendingTransaction.Id);
 
                 if (foundTransaction == null)
@@ -140,6 +143,7 @@ namespace testDotnetBackend.Web.Services
         {
             var foundTransaction = await _applicationContext.Transactions
                 .Select(transaction => new Transaction { Id = transaction.Id })
+                .AsNoTracking()
                 .FirstOrDefaultAsync(transaction => transaction.Id == id);
 
             if (foundTransaction == null) return new OperationResult(true, "Cannot find transaction with such id");

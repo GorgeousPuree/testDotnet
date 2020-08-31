@@ -22,6 +22,7 @@ namespace testDotnetBackend.Web.Infrastructure.Extensions
                     .Where(transaction =>
                           (transactionFiltersModel.Types == null) ? true
                                 : transactionFiltersModel.Types.Contains(transaction.Type))
+                    .AsNoTracking()
                     .OrderBy(transaction => transaction.Id)
                     .Skip(i)
                     .Select(transaction => new TransactionModel
